@@ -1,0 +1,38 @@
+{
+  "name": "sarala-wood-industries",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "gallery": "node scripts/build-gallery.mjs",
+    "editorial": "node scripts/build-editorial.mjs",
+    "textures": "node scripts/build-textures.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
+    "assets": "npm run textures && npm run editorial && npm run gallery"
+  },
+  "dependencies": {
+    "framer-motion": "11.18.2",
+    "gsap": "3.12.5",
+    "lenis": "1.1.18",
+    "next": "^16.4.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "resend": "4.1.2",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "autoprefixer": "10.4.20",
+    "lighthouse": "^12.3.0",
+    "playwright": "^1.49.1",
+    "postcss": "8.4.49",
+    "sharp": "0.33.5",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.3"
+  }
+}

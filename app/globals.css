@@ -1,0 +1,485 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes enter-line {
+  from { transform: translateY(108%); }
+  to { transform: translateY(0); }
+}
+
+/* Translate only, deliberately: an element at opacity 0 has not been painted,
+   so fading the first screen in delays Largest Contentful Paint by the length
+   of the animation. Sliding alone reads the same and paints immediately. */
+@keyframes enter-up {
+  from { transform: translateY(20px); }
+  to { transform: translateY(0); }
+}
+
+/* ---------- Preloader ----------
+   Two wood panels part over a lotus that draws itself. It is gated by a tiny
+   inline script in the document head rather than by React, so it starts at the
+   very first paint instead of appearing a second later on top of content that
+   had already rendered — which is both uglier and far slower to Largest
+   Contentful Paint. The whole thing is done in 1.3s and never runs twice in a
+   session. */
+
+@keyframes curtain-left {
+  0%, 46% { transform: translateX(0); }
+  100% { transform: translateX(-101%); }
+}
+
+@keyframes curtain-right {
+  0%, 46% { transform: translateX(0); }
+  100% { transform: translateX(101%); }
+}
+
+@keyframes curtain-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes curtain-mark {
+  0% { opacity: 0; }
+  28% { opacity: 1; }
+  52% { opacity: 1; }
+  68% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes curtain-done {
+  to { visibility: hidden; }
+}
+
+@layer base {
+  :root {
+    --gutter: clamp(1rem, 5vw, 4.5rem);
+
+    /* Wood grain and film grain, baked to seamless WebP tiles by
+       scripts/build-textures.mjs. These were inline feTurbulence filters; the
+       browser re-ran the turbulence every time it rasterised a surface, which
+       is slow enough on a phone to hold up the first paint. */
+    --grain-wood: url('/textures/wood-grain.webp');
+    --grain-wood-fine: url('/textures/wood-grain-fine.webp');
+    --film-grain: url('/textures/film-grain.webp');
+
+    /* Carved lotus-and-bead band — repeats seamlessly at 72px */
+    --band-lotus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='30' viewBox='0 0 72 30'%3E%3Cg fill='none' stroke='%23c9a35f' stroke-width='1.05' stroke-linecap='round'%3E%3Cpath d='M36 25.5C27.6 19.5 27.6 9 36 3.6 44.4 9 44.4 19.5 36 25.5Z'/%3E%3Cpath d='M36 25.5C29.6 23.4 22.4 17 21.3 9.6 27.6 11.3 33 16.8 36 25.5Z'/%3E%3Cpath d='M36 25.5C42.4 23.4 49.6 17 50.7 9.6 44.4 11.3 39 16.8 36 25.5Z'/%3E%3Ccircle cx='4' cy='15' r='2.1'/%3E%3Ccircle cx='68' cy='15' r='2.1'/%3E%3Cpath d='M7.4 15h8.2M56.4 15h8.2'/%3E%3C/g%3E%3Cg fill='none' stroke='%23c9a35f' stroke-width='0.55' opacity='0.6'%3E%3Cpath d='M0 28.6h72M0 1.4h72'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  * {
+    @apply border-0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  /* Lenis drives scrolling; keep native smooth-scroll from fighting it */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-ivory font-sans text-body text-ink antialiased;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif font-normal text-rosewood;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  img {
+    @apply block max-w-full;
+  }
+
+  ::selection {
+    background: #c9a35f;
+    color: #1c120c;
+  }
+
+  /* Visible, on-brand focus ring everywhere */
+  :focus-visible {
+    outline: 2px solid #c9a35f;
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* The curtain itself. Hidden unless the inline head script opted in. */
+  .preloader {
+    display: none;
+  }
+
+  :root.preloading .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    animation: curtain-done 0s linear 1.3s forwards;
+  }
+
+  /* A plain gradient, deliberately: give these panels a background *image*
+     and the browser counts the curtain itself as the Largest Contentful
+     Paint, so the metric measures the loader rather than the page. */
+  :root.preloading .preloader__panel {
+    background: linear-gradient(176deg, #3a2016 0%, #2b1a12 48%, #1c120c 100%);
+    position: absolute;
+    inset-block: 0;
+    width: 50.5%;
+    animation-duration: 1.3s;
+    animation-timing-function: theme('transitionTimingFunction.carve');
+    animation-fill-mode: forwards;
+  }
+  :root.preloading .preloader__panel--left {
+    left: 0;
+    animation-name: curtain-left;
+  }
+  :root.preloading .preloader__panel--right {
+    right: 0;
+    animation-name: curtain-right;
+  }
+
+  :root.preloading .preloader__mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    gap: 1.1rem;
+    animation: curtain-mark 1.3s theme('transitionTimingFunction.carve') forwards;
+  }
+
+  :root.preloading .preloader__mark path {
+    stroke-dasharray: 1;
+    animation: curtain-draw 760ms theme('transitionTimingFunction.carve') both;
+  }
+
+  /* Nothing scrolls while the curtain is closed. */
+  :root.preloading body {
+    overflow: hidden;
+  }
+  :root.preloaded body {
+    overflow: visible;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root.preloading .preloader {
+      display: none;
+    }
+    :root.preloading body {
+      overflow: visible;
+    }
+  }
+
+  /* ---------- First-screen entrance ----------
+     Above-the-fold content animates in CSS, not JavaScript. A JS-driven
+     entrance leaves the headline invisible until framer-motion has hydrated,
+     which on a throttled phone pushes Largest Contentful Paint past five
+     seconds — and leaves nothing at all for a visitor without JavaScript.
+     These start at first paint and need no script. */
+
+  .enter-line {
+    display: block;
+    animation: enter-line 620ms theme('transitionTimingFunction.carve') both;
+  }
+
+  .enter-up {
+    animation: enter-up 620ms theme('transitionTimingFunction.carve') both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .enter-line,
+    .enter-up {
+      animation: none;
+    }
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: theme('maxWidth.wrap');
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* ---------- Surfaces ---------- */
+
+  /* Dark wood panel: base tone + two grain layers + a soft directional light */
+  .surface-wood {
+    position: relative;
+    background-color: theme('colors.rosewood');
+    background-image:
+      radial-gradient(120% 90% at 18% 0%, rgba(185, 129, 74, 0.22), transparent 62%),
+      var(--grain-wood-fine),
+      var(--grain-wood),
+      linear-gradient(176deg, #40241a 0%, #2b1a12 48%, #1c120c 100%);
+    background-size: auto, 600px 240px, 1200px 400px, auto;
+    background-blend-mode: screen, overlay, overlay, normal;
+    color: theme('colors.sandalwood');
+  }
+
+  .surface-wood h1,
+  .surface-wood h2,
+  .surface-wood h3,
+  .surface-wood h4 {
+    color: theme('colors.sandalwood');
+  }
+
+  /* Ivory "paper" sections, with the faintest fibre so they aren't flat */
+  .surface-paper {
+    background-color: theme('colors.ivory');
+    background-image: radial-gradient(130% 100% at 50% -10%, rgba(185, 129, 74, 0.07), transparent 60%);
+  }
+
+  .surface-sandal {
+    background-color: theme('colors.sandalwood');
+    background-image: radial-gradient(120% 100% at 50% 0%, rgba(107, 63, 34, 0.07), transparent 65%);
+  }
+
+  /* The hero's push-in runs for fourteen seconds over a full-bleed photograph.
+     Promoting it to its own compositor layer keeps that on the GPU instead of
+     re-rasterising the largest element on the page every frame. */
+  .animate-slow-push {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  /* Sitewide film grain, laid over everything but never catching the pointer */
+  .film-grain::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    pointer-events: none;
+    background-image: var(--film-grain);
+    background-size: 192px 192px;
+    opacity: 0.1;
+    mix-blend-mode: multiply;
+  }
+
+  /* ---------- Ornamental rules ---------- */
+
+  .band-lotus {
+    height: 30px;
+    background-image: var(--band-lotus);
+    background-repeat: repeat-x;
+    background-position: center;
+    opacity: 0.85;
+  }
+
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 163, 95, 0.45) 18%, rgba(201, 163, 95, 0.45) 82%, transparent);
+  }
+
+  /* ---------- Type ---------- */
+
+  .eyebrow {
+    @apply font-sans text-eyebrow font-semibold uppercase text-amber;
+    letter-spacing: 0.3em;
+  }
+
+  .surface-wood .eyebrow {
+    @apply text-brass;
+  }
+
+  .accent {
+    @apply font-serif italic text-amber;
+    font-weight: 400;
+  }
+
+  .surface-wood .accent,
+  .surface-wood .numeral {
+    @apply text-brass;
+  }
+
+  .numeral {
+    @apply font-serif italic text-amber;
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  .dropcap::first-letter {
+    @apply float-left font-serif text-teak;
+    font-size: 4.6rem;
+    line-height: 0.78;
+    padding: 0.14em 0.1em 0 0;
+  }
+
+  /* ---------- Frames ---------- */
+
+  /* Inset brass hairline with carved corner brackets */
+  .brass-frame {
+    position: relative;
+  }
+  .brass-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(201, 163, 95, 0.32);
+    pointer-events: none;
+  }
+
+  .arch-mask {
+    border-radius: theme('borderRadius.arch');
+    overflow: hidden;
+  }
+
+  /* ---------- Links & buttons ---------- */
+
+  /* Underline draws from the left */
+  .link-draw {
+    position: relative;
+    display: inline-block;
+  }
+  .link-draw::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 600ms theme('transitionTimingFunction.carve');
+  }
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* Brass fills from the bottom */
+  .btn {
+    @apply relative inline-flex items-center justify-center overflow-hidden font-sans text-eyebrow font-semibold uppercase;
+    letter-spacing: 0.24em;
+    padding: 1.05rem 2rem;
+    border: 1px solid rgba(201, 163, 95, 0.6);
+    color: theme('colors.brass');
+    transition: color 600ms theme('transitionTimingFunction.carve'),
+      border-color 600ms theme('transitionTimingFunction.carve');
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: theme('colors.brass');
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 700ms theme('transitionTimingFunction.carve');
+  }
+  .btn:hover,
+  .btn:focus-visible {
+    color: theme('colors.ebony');
+    border-color: theme('colors.brass');
+  }
+  .btn:hover::before,
+  .btn:focus-visible::before {
+    transform: scaleY(1);
+  }
+
+  .btn-solid {
+    background: theme('colors.brass');
+    color: theme('colors.ebony');
+    border-color: theme('colors.brass');
+  }
+  .btn-solid::before {
+    background: theme('colors.sandalwood');
+  }
+  .btn-solid:hover,
+  .btn-solid:focus-visible {
+    color: theme('colors.ebony');
+  }
+
+  .btn-ink {
+    color: theme('colors.teak');
+    border-color: rgba(107, 63, 34, 0.45);
+  }
+  .btn-ink::before {
+    background: theme('colors.teak');
+  }
+  .btn-ink:hover,
+  .btn-ink:focus-visible {
+    color: theme('colors.ivory');
+    border-color: theme('colors.teak');
+  }
+
+  /* ---------- Form fields ---------- */
+
+  .field-label {
+    @apply mb-2 block font-sans text-eyebrow font-semibold uppercase text-brass;
+    letter-spacing: 0.26em;
+  }
+
+  .field-input {
+    @apply w-full bg-transparent font-sans text-body;
+    border-bottom: 1px solid rgba(239, 227, 207, 0.28);
+    padding: 0.55rem 0;
+    color: theme('colors.sandalwood');
+    transition: border-color 500ms theme('transitionTimingFunction.carve');
+  }
+  .field-input::placeholder {
+    color: rgba(239, 227, 207, 0.38);
+  }
+  .field-input:focus {
+    border-color: theme('colors.brass');
+    outline: none;
+  }
+  .field-input option {
+    color: theme('colors.ink');
+  }
+
+  /* ---------- Utility ---------- */
+
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Hide scrollbars on horizontal rails without losing keyboard scroll */
+  .rail-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 163, 95, 0.5) transparent;
+  }
+  .rail-scroll::-webkit-scrollbar {
+    height: 3px;
+  }
+  .rail-scroll::-webkit-scrollbar-thumb {
+    background: rgba(201, 163, 95, 0.45);
+  }
+}

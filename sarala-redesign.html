@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sarala Wood Industries — Redesign Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ebony:#1c120c;
+  --rosewood:#3a2016;
+  --teak:#6b3f22;
+  --honey:#b9814a;
+  --brass:#c9a35f;
+  --sandal:#efe3cf;
+  --ivory:#f8f2e7;
+  --ink:#2a1d15;
+  --muted:#7a6553;
+  --serif:'Cormorant Garamond', Georgia, serif;
+  --sans:'Manrope', system-ui, sans-serif;
+  /* procedural wood grain */
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2400' height='700'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.09' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.25 0 0 0 0 0.13 0 0 0 1.1 -0.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  /* carved lotus band */
+  --band:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='28' viewBox='0 0 64 28'%3E%3Cg fill='none' stroke='%23c9a35f' stroke-width='1.1'%3E%3Cpath d='M32 24 C24 18 24 8 32 3 C40 8 40 18 32 24Z'/%3E%3Cpath d='M32 24 C26 22 19 16 18 9 C24 11 29 16 32 24Z'/%3E%3Cpath d='M32 24 C38 22 45 16 46 9 C40 11 35 16 32 24Z'/%3E%3Ccircle cx='3' cy='14' r='2.2'/%3E%3Ccircle cx='61' cy='14' r='2.2'/%3E%3Cpath d='M6 14 H14 M50 14 H58'/%3E%3Cpath d='M0 26.5 H64 M0 1.5 H64' stroke-width='.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--ivory);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1240px,92vw);margin:0 auto}
+.eyebrow{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;font-weight:600;color:var(--honey)}
+h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.05;letter-spacing:-.01em}
+h2{font-size:clamp(2.4rem,5vw,4.2rem)}
+h2 em,h1 em{font-style:italic;color:var(--brass)}
+.band{height:28px;background:var(--band) repeat-x center;opacity:.85}
+
+/* wood surface utility */
+.wood{background-color:var(--rosewood);background-image:linear-gradient(180deg,rgba(28,18,12,.35),rgba(28,18,12,.65)),var(--grain);background-size:auto,2400px 700px}
+
+/* ---------- NAV ---------- */
+header{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .4s,padding .4s;padding:22px 0}
+header.solid{background:rgba(28,18,12,.94);backdrop-filter:blur(8px);padding:12px 0}
+.nav{display:flex;align-items:center;justify-content:space-between;color:var(--sandal)}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-mark{width:44px;height:44px;border:1px solid var(--brass);border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:1.5rem;color:var(--brass);font-style:italic}
+.logo-text{font-family:var(--serif);font-size:1.35rem;letter-spacing:.06em;line-height:1}
+.logo-text small{display:block;font-family:var(--sans);font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--brass);margin-top:5px}
+.links{display:flex;gap:34px;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase}
+.links a{opacity:.82;position:relative;padding:4px 0}
+.links a:hover{opacity:1}
+.links a::after{content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;background:var(--brass);transition:width .3s}
+.links a:hover::after{width:100%}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;border:1px solid var(--brass);color:var(--sandal);transition:all .3s}
+.btn:hover{background:var(--brass);color:var(--ebony)}
+.btn.solid{background:var(--brass);color:var(--ebony)}
+.btn.solid:hover{background:var(--sandal)}
+.btn.dark{border-color:var(--ink);color:var(--ink)}
+.btn.dark:hover{background:var(--ink);color:var(--sandal)}
+.burger{display:none;background:none;border:0;color:var(--sandal);font-size:1.6rem}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;color:var(--sandal);overflow:hidden}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;animation:slowzoom 18s ease-out forwards}
+@keyframes slowzoom{from{transform:scale(1.12)}to{transform:scale(1)}}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(28,18,12,.92) 0%,rgba(28,18,12,.55) 55%,rgba(28,18,12,.2) 100%),linear-gradient(0deg,rgba(28,18,12,.85),transparent 45%)}
+.hero-frame{position:absolute;inset:96px 3vw 3vw;border:1px solid rgba(201,163,95,.35);pointer-events:none;z-index:2}
+.hero-frame::before,.hero-frame::after{content:"";position:absolute;width:46px;height:46px;border:1px solid var(--brass)}
+.hero-frame::before{top:-6px;left:-6px;border-right:0;border-bottom:0}
+.hero-frame::after{bottom:-6px;right:-6px;border-left:0;border-top:0}
+.hero-inner{position:relative;z-index:3;padding:0 0 13vh}
+.hero h1{font-size:clamp(3.2rem,8.4vw,7.6rem);max-width:12ch;margin:22px 0 28px}
+.hero p{max-width:46ch;font-size:1.05rem;font-weight:300;opacity:.85;margin-bottom:40px}
+.hero-ctas{display:flex;gap:16px;flex-wrap:wrap}
+.hero-meta{position:absolute;right:6vw;bottom:13vh;z-index:3;text-align:right;font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--brass);line-height:1.5}
+.hero-meta b{display:block;font-style:normal;font-size:4.2rem;font-weight:400;color:var(--sandal);line-height:1}
+.scroll-cue{position:absolute;left:50%;bottom:28px;z-index:3;width:1px;height:56px;background:linear-gradient(var(--brass),transparent);animation:cue 2.2s infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- STORY ---------- */
+.story{padding:150px 0 130px;position:relative}
+.story-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:7vw;align-items:center}
+.arch{position:relative;aspect-ratio:4/5;border-radius:999px 999px 6px 6px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(58,32,22,.55)}
+.arch img{width:100%;height:100%;object-fit:cover}
+.arch-wrap{position:relative;padding:22px}
+.arch-wrap::before{content:"";position:absolute;inset:0;border:1px solid var(--honey);border-radius:999px 999px 6px 6px;opacity:.6}
+.year-seal{position:absolute;right:-18px;bottom:60px;width:132px;height:132px;border-radius:50%;background:var(--ebony);color:var(--brass);display:grid;place-items:center;text-align:center;font-family:var(--serif);box-shadow:0 18px 40px -12px rgba(0,0,0,.5)}
+.year-seal span{font-size:.62rem;font-family:var(--sans);letter-spacing:.3em;text-transform:uppercase;display:block}
+.year-seal b{font-size:2.3rem;font-weight:500;display:block;line-height:1;color:var(--sandal)}
+.story h2{margin:18px 0 30px}
+.story p{color:var(--muted);margin-bottom:20px;max-width:52ch}
+.dropcap::first-letter{font-family:var(--serif);float:left;font-size:4.6rem;line-height:.82;padding:8px 12px 0 0;color:var(--teak)}
+.signature{font-family:var(--serif);font-style:italic;font-size:1.6rem;color:var(--teak);margin-top:30px}
+.signature small{display:block;font-family:var(--sans);font-style:normal;font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* ---------- CRAFT ---------- */
+.craft{color:var(--sandal);padding:130px 0 140px;position:relative}
+.craft-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:80px;flex-wrap:wrap}
+.craft-head p{max-width:40ch;opacity:.7;font-weight:300}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(201,163,95,.3)}
+.step{padding:44px 30px 10px 0;position:relative}
+.step + .step{padding-left:30px;border-left:1px solid rgba(201,163,95,.18)}
+.step .num{font-family:var(--serif);font-style:italic;font-size:3.6rem;color:var(--brass);line-height:1;opacity:.9}
+.step h3{font-size:1.75rem;margin:20px 0 12px}
+.step p{font-size:.92rem;opacity:.68;font-weight:300}
+.step svg{width:40px;height:40px;stroke:var(--brass);fill:none;stroke-width:1.1;margin-bottom:18px}
+
+/* ---------- COLLECTIONS ---------- */
+.collections{padding:140px 0 120px}
+.sec-head{text-align:center;max-width:720px;margin:0 auto 80px}
+.sec-head h2{margin:16px 0 18px}
+.sec-head p{color:var(--muted)}
+.coll-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
+.card{position:relative;overflow:hidden;color:var(--sandal);min-height:440px;display:flex;align-items:flex-end;isolation:isolate}
+.card .bg{position:absolute;inset:0;z-index:-2}
+.card .bg img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.card:hover .bg img{transform:scale(1.07)}
+.card::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(28,18,12,.92) 0%,rgba(28,18,12,.25) 60%,rgba(28,18,12,.05))}
+.card::after{content:"";position:absolute;inset:14px;border:1px solid rgba(201,163,95,0);transition:border-color .5s}
+.card:hover::after{border-color:rgba(201,163,95,.55)}
+.card-body{padding:38px}
+.card .tag{font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--brass)}
+.card h3{font-size:2.3rem;margin:10px 0 10px}
+.card p{font-size:.9rem;opacity:.75;font-weight:300;max-width:38ch;max-height:0;overflow:hidden;transition:max-height .6s}
+.card:hover p{max-height:120px}
+.c1{grid-column:span 7;min-height:560px}.c2{grid-column:span 5;min-height:560px}
+.c3{grid-column:span 5}.c4{grid-column:span 7}
+
+/* ---------- SPACES ---------- */
+.spaces{padding:20px 0 140px}
+.spaces-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(107,63,34,.2)}
+.space{padding:56px 44px;position:relative;transition:background .4s}
+.space + .space{border-left:1px solid rgba(107,63,34,.2)}
+.space:hover{background:var(--sandal)}
+.space .idx{font-family:var(--serif);font-style:italic;color:var(--honey);font-size:1.2rem}
+.space h3{font-size:2.2rem;margin:14px 0 14px}
+.space p{color:var(--muted);font-size:.95rem;margin-bottom:26px}
+.space a{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;color:var(--teak);border-bottom:1px solid var(--honey);padding-bottom:4px}
+
+/* ---------- GALLERY ---------- */
+.gallery{padding:120px 0 0;color:var(--sandal)}
+.gallery .sec-head p{color:var(--sandal);opacity:.65}
+.strip{display:flex;gap:20px;overflow-x:auto;padding:0 4vw 90px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--brass) transparent}
+.strip figure{flex:0 0 auto;scroll-snap-align:center;position:relative}
+.strip figure:nth-child(odd){margin-top:60px}
+.strip .ph{width:clamp(260px,30vw,420px);aspect-ratio:3/4;overflow:hidden}
+.strip figure:nth-child(3n) .ph{aspect-ratio:4/5}
+.strip img{width:100%;height:100%;object-fit:cover}
+.strip figcaption{font-family:var(--serif);font-style:italic;font-size:1.05rem;margin-top:14px;color:var(--brass)}
+
+/* ---------- QUOTE ---------- */
+.quote{padding:150px 0;text-align:center}
+.quote blockquote{font-family:var(--serif);font-size:clamp(2rem,4.2vw,3.5rem);line-height:1.2;max-width:22ch;margin:0 auto;color:var(--rosewood)}
+.quote blockquote em{color:var(--honey)}
+.quote .orn{width:90px;margin:0 auto 40px;opacity:.9}
+
+/* ---------- CLIENTS ---------- */
+.clients{padding:0 0 130px}
+.clients-row{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(107,63,34,.2);border-bottom:1px solid rgba(107,63,34,.2)}
+.clients-row div{padding:40px;display:grid;place-items:center;min-height:150px}
+.clients-row div + div{border-left:1px solid rgba(107,63,34,.2)}
+.clients-row img{max-height:70px;filter:grayscale(1) sepia(.5);opacity:.7;transition:all .4s;mix-blend-mode:multiply}
+.clients-row img:hover{filter:none;opacity:1}
+
+/* ---------- CONTACT ---------- */
+.contact{color:var(--sandal);padding:130px 0}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:7vw}
+.contact h2{margin:16px 0 26px}
+.contact .lead{opacity:.7;font-weight:300;max-width:42ch;margin-bottom:46px}
+.info{display:grid;gap:28px}
+.info div span{display:block;font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--brass);margin-bottom:6px}
+.info div p,.info div a{font-family:var(--serif);font-size:1.45rem;line-height:1.4}
+form{background:rgba(248,242,231,.04);border:1px solid rgba(201,163,95,.3);padding:48px;display:grid;gap:24px;backdrop-filter:blur(2px)}
+form h3{font-size:1.9rem}
+.field label{display:block;font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+.field input,.field select,.field textarea{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(239,227,207,.3);color:var(--sandal);font:inherit;padding:8px 0;outline:none;transition:border-color .3s}
+.field select option{color:var(--ink)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--brass)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--ebony);color:rgba(239,227,207,.6);padding:70px 0 34px;font-size:.85rem}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding-bottom:50px;border-bottom:1px solid rgba(201,163,95,.18)}
+.foot h4{font-family:var(--sans);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--brass);margin-bottom:16px;font-weight:600}
+.foot ul{list-style:none;display:grid;gap:8px}
+.foot a:hover{color:var(--sandal)}
+.foot .logo{color:var(--sandal);margin-bottom:18px}
+.legal{display:flex;justify-content:space-between;padding-top:26px;font-size:.75rem;flex-wrap:wrap;gap:10px}
+
+/* float whatsapp */
+.wa{position:fixed;right:24px;bottom:24px;z-index:60;width:56px;height:56px;border-radius:50%;background:var(--brass);display:grid;place-items:center;box-shadow:0 12px 30px -8px rgba(0,0,0,.5);transition:transform .3s}
+.wa:hover{transform:scale(1.08)}
+.wa svg{width:26px;height:26px;fill:var(--ebony)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(40px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* image fallback: wood panel */
+.ph-fallback{background-color:var(--teak);background-image:linear-gradient(135deg,rgba(185,129,74,.25),rgba(28,18,12,.5)),var(--grain);background-size:auto,2400px 700px}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:980px){
+  .links,.nav .btn{display:none}
+  .burger{display:block}
+  .links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--ebony);padding:30px 6vw;gap:22px}
+  .story-grid,.contact-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .step:nth-child(3){padding-left:0;border-left:0}
+  .c1,.c2,.c3,.c4{grid-column:span 12;min-height:420px}
+  .card p{max-height:none}
+  .spaces-grid{grid-template-columns:1fr}
+  .space + .space{border-left:0;border-top:1px solid rgba(107,63,34,.2)}
+  .clients-row{grid-template-columns:1fr 1fr}
+  .clients-row div:nth-child(3){border-left:0;border-top:1px solid rgba(107,63,34,.2)}
+  .clients-row div:nth-child(4){border-top:1px solid rgba(107,63,34,.2)}
+  .foot{grid-template-columns:1fr 1fr}
+  .hero-meta{display:none}
+  .year-seal{right:0}
+}
+@media (max-width:560px){
+  .steps{grid-template-columns:1fr}
+  .step + .step{padding-left:0;border-left:0;border-top:1px solid rgba(201,163,95,.18)}
+  .row2{grid-template-columns:1fr}
+  form{padding:30px 22px}
+  .foot{grid-template-columns:1fr}
+  .hero-frame{inset:80px 14px 14px}
+}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="wrap nav">
+    <a href="#top" class="logo">
+      <span class="logo-mark">S</span>
+      <span class="logo-text">SARALA<small>Wood Industries · 1986</small></span>
+    </a>
+    <nav class="links" id="links">
+      <a href="#story">Our Story</a>
+      <a href="#craft">The Craft</a>
+      <a href="#collections">Collections</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="btn">Commission a piece</a>
+    <button class="burger" aria-label="Menu" onclick="document.getElementById('links').classList.toggle('open')">☰</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner1.jpg" alt="Hand-carved wooden door by Sarala" onerror="this.remove()"></div>
+  <div class="hero-frame"></div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Heritage woodcraft · Karkala, Karnataka</span>
+    <h1>Carved by hand. <em>Made to outlive us.</em></h1>
+    <p>Since 1986, our craftsmen have turned seasoned timber into doors, furniture and sacred spaces, each one carved to be handed down.</p>
+    <div class="hero-ctas">
+      <a href="#collections" class="btn solid">Explore the collections</a>
+      <a href="#craft" class="btn">See how it's made</a>
+    </div>
+  </div>
+  <div class="hero-meta"><b>40</b>years of carving<br>in coastal Karnataka</div>
+  <div class="scroll-cue"></div>
+</section>
+
+<div class="wood"><div class="band"></div></div>
+
+<!-- STORY -->
+<section class="story" id="story">
+  <div class="wrap story-grid">
+    <div class="arch-wrap rv">
+      <div class="arch ph-fallback"><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/wel-img1.jpg" alt="Sarala woodwork detail" onerror="this.remove()"></div>
+      <div class="year-seal"><div><span>Est.</span><b>1986</b><span>Nandalike</span></div></div>
+    </div>
+    <div class="rv">
+      <span class="eyebrow">Our Story</span>
+      <h2>A home is remembered by its <em>wood.</em></h2>
+      <p class="dropcap">In 1986, Mrs. Sarala Hegde saw something others had overlooked: that the heritage carving traditions of our region belonged not only in temples and palaces, but in the homes of the families who lived around them.</p>
+      <p>What began as a small workshop in Nandalike, near Karkala, has grown into a studio of craftsmen who still work the way she believed in. We choose the timber, season it patiently and carve it by hand, so the grain and the detail age together.</p>
+      <p>Today we make doors and frames, windows, wardrobes, furniture and modular kitchens for homes, offices and places of worship across Karnataka and beyond.</p>
+      <div class="signature">Sarala Hegde<small>Founder</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CRAFT -->
+<section class="craft wood" id="craft">
+  <div class="wrap">
+    <div class="craft-head rv">
+      <div><span class="eyebrow">The Craft</span><h2 style="margin-top:16px">From log to <em>heirloom.</em></h2></div>
+      <p>Every piece passes through the same four hands-on stages. Nothing is rushed, because wood remembers how it was treated.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv">
+        <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="11"/><circle cx="20" cy="20" r="6"/><circle cx="20" cy="20" r="1.5"/></svg>
+        <div class="num">i.</div><h3>Selecting</h3>
+        <p>We hand-pick timber for grain, density and character, choosing each board for the piece it will become.</p>
+      </div>
+      <div class="step rv">
+        <svg viewBox="0 0 40 40"><path d="M6 12h28M6 20h28M6 28h28"/><path d="M10 8v24M30 8v24"/></svg>
+        <div class="num">ii.</div><h3>Seasoning</h3>
+        <p>The wood is seasoned slowly so it stays stable through coastal monsoons and dry summers alike.</p>
+      </div>
+      <div class="step rv">
+        <svg viewBox="0 0 40 40"><path d="M20 34c-7-5-7-16 0-24 7 8 7 19 0 24z"/><path d="M20 34c-5-1-11-6-12-13 5 1 10 6 12 13zM20 34c5-1 11-6 12-13-5 1-10 6-12 13z"/></svg>
+        <div class="num">iii.</div><h3>Carving</h3>
+        <p>Master carvers bring out lotus, vine and temple motifs by hand, line by line, with chisel and mallet.</p>
+      </div>
+      <div class="step rv">
+        <svg viewBox="0 0 40 40"><path d="M8 32 32 8"/><path d="M26 6l8 8-4 4-8-8z"/><circle cx="10" cy="30" r="3"/></svg>
+        <div class="num">iv.</div><h3>Finishing</h3>
+        <p>Layered polishing deepens the natural tone and protects the surface without hiding the grain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLECTIONS -->
+<section class="collections" id="collections">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Collections</span>
+      <h2>Made for the way <em>you live.</em></h2>
+      <p>Every piece is made to order, sized for your space and finished to match your home.</p>
+    </div>
+    <div class="coll-grid">
+      <a href="#contact" class="card c1 rv">
+        <div class="bg ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner2.jpg" alt="" onerror="this.remove()"></div>
+        <div class="card-body"><span class="tag">01 · Signature</span><h3>Doors &amp; Windows</h3><p>Carved main doors, frames and windows, the first thing your guests touch and the last thing they forget.</p></div>
+      </a>
+      <a href="#contact" class="card c2 rv">
+        <div class="bg ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner3.jpg" alt="" onerror="this.remove()"></div>
+        <div class="card-body"><span class="tag">02</span><h3>Wardrobes</h3><p>Solid-wood wardrobes with carved panels and fittings built for decades of daily use.</p></div>
+      </a>
+      <a href="#contact" class="card c3 rv">
+        <div class="bg ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner4.jpg" alt="" onerror="this.remove()"></div>
+        <div class="card-body"><span class="tag">03</span><h3>Home &amp; Office Furniture</h3><p>Custom-made beds, tables, seating and desks designed around your rooms.</p></div>
+      </a>
+      <a href="#contact" class="card c4 rv">
+        <div class="bg ph-fallback"><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/wel-img%203.png" alt="" onerror="this.remove()"></div>
+        <div class="card-body"><span class="tag">04</span><h3>Modular Kitchens</h3><p>The warmth of real wood brought into the most-used room of the house.</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SPACES -->
+<section class="spaces">
+  <div class="wrap">
+    <div class="spaces-grid rv">
+      <div class="space"><span class="idx">i.</span><h3>Residential</h3><p>Main doors, pooja rooms, wardrobes and furniture that give a home its character.</p><a href="#gallery">View homes →</a></div>
+      <div class="space"><span class="idx">ii.</span><h3>Commercial</h3><p>Reception spaces, offices and hospitality interiors with a quiet sense of heritage.</p><a href="#gallery">View projects →</a></div>
+      <div class="space"><span class="idx">iii.</span><h3>Places of Worship</h3><p>Temple doors, ceilings and shrine work carved in the traditions of the region.</p><a href="#gallery">View sacred work →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery wood" id="gallery">
+  <div class="sec-head rv" style="margin-bottom:60px">
+    <span class="eyebrow">From the Workshop</span>
+    <h2>Every grain <em>tells a story.</em></h2>
+    <p>Scroll through recent work →</p>
+  </div>
+  <div class="strip">
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner1.jpg" alt="" onerror="this.remove()"></div><figcaption>Carved main door</figcaption></figure>
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/mobile-banner1.jpg" alt="" onerror="this.remove()"></div><figcaption>Detail work</figcaption></figure>
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner2.jpg" alt="" onerror="this.remove()"></div><figcaption>Residential</figcaption></figure>
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/mobile-banner2.jpg" alt="" onerror="this.remove()"></div><figcaption>Panel carving</figcaption></figure>
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner3.jpg" alt="" onerror="this.remove()"></div><figcaption>Interiors</figcaption></figure>
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/mobile-banner3.jpg" alt="" onerror="this.remove()"></div><figcaption>Sacred spaces</figcaption></figure>
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/uploads/2020/04/banner4.jpg" alt="" onerror="this.remove()"></div><figcaption>Furniture</figcaption></figure>
+    <figure><div class="ph ph-fallback"><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/mobile-banner4.jpg" alt="" onerror="this.remove()"></div><figcaption>Finishing</figcaption></figure>
+  </div>
+  <div class="band"></div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote">
+  <div class="wrap rv">
+    <svg class="orn" viewBox="0 0 90 40" fill="none" stroke="#b9814a" stroke-width="1.1"><path d="M45 36C36 29 36 15 45 4c9 11 9 25 0 32z"/><path d="M45 36c-7-2-15-9-16-18 7 2 13 9 16 18zM45 36c7-2 15-9 16-18-7 2-13 9-16 18z"/><path d="M2 36h30M58 36h30"/><circle cx="2" cy="36" r="1.6"/><circle cx="88" cy="36" r="1.6"/></svg>
+    <blockquote>When you choose Sarala, you choose <em>quality and splendour</em> that only grows richer with time.</blockquote>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="clients">
+  <div class="wrap">
+    <div class="sec-head rv" style="margin-bottom:50px"><span class="eyebrow">Trusted by</span></div>
+    <div class="clients-row rv">
+      <div><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/client1.jpg" alt="Client" onerror="this.parentNode.textContent='Client'"></div>
+      <div><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/client2.jpg" alt="Client" onerror="this.parentNode.textContent='Client'"></div>
+      <div><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/client3.jpg" alt="Client" onerror="this.parentNode.textContent='Client'"></div>
+      <div><img src="https://saralawood.com/wp-content/themes/twentysixteen/images/client4.jpg" alt="Client" onerror="this.parentNode.textContent='Client'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact wood" id="contact">
+  <div class="wrap contact-grid">
+    <div class="rv">
+      <span class="eyebrow">Commission a piece</span>
+      <h2>Let's carve something <em>for your home.</em></h2>
+      <p class="lead">Tell us about your space. We'll suggest timber, design and finish, and visit if needed.</p>
+      <div class="info">
+        <div><span>Workshop</span><p>Nandalike Post, Karkala Taluk,<br>Udupi District, Karnataka 576111</p></div>
+        <div><span>Call</span><a href="tel:+919845120969">+91 98451 20969</a><br><a href="tel:08258274329">08258 274329</a></div>
+      </div>
+    </div>
+    <form class="rv" onsubmit="event.preventDefault();this.querySelector('button').textContent='Thank you, we\'ll be in touch';">
+      <h3>Start a conversation</h3>
+      <div class="row2">
+        <div class="field"><label>Name</label><input required></div>
+        <div class="field"><label>Phone</label><input type="tel" required></div>
+      </div>
+      <div class="field"><label>I'm interested in</label>
+        <select><option>Doors &amp; Windows</option><option>Wardrobes</option><option>Home / Office Furniture</option><option>Modular Kitchen</option><option>Temple / Place of Worship</option></select>
+      </div>
+      <div class="field"><label>Tell us about your space</label><textarea rows="3"></textarea></div>
+      <button class="btn solid" style="justify-self:start;cursor:pointer">Send enquiry</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><a href="#top" class="logo"><span class="logo-mark">S</span><span class="logo-text">SARALA<small>Wood Industries · 1986</small></span></a><p>Heritage carved woodwork for homes, offices and places of worship.</p></div>
+      <div><h4>Collections</h4><ul><li><a href="#collections">Doors &amp; Windows</a></li><li><a href="#collections">Wardrobes</a></li><li><a href="#collections">Furniture</a></li><li><a href="#collections">Modular Kitchens</a></li></ul></div>
+      <div><h4>Gallery</h4><ul><li><a href="#gallery">Residential</a></li><li><a href="#gallery">Commercial</a></li><li><a href="#gallery">Places of Worship</a></li></ul></div>
+      <div><h4>Follow</h4><ul><li><a href="#">Instagram</a></li><li><a href="#">Facebook</a></li><li><a href="#">LinkedIn</a></li></ul></div>
+    </div>
+    <div class="legal"><span>© Sarala Wood Industries, Karkala</span><span>Website redesign concept</span></div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/919845120969" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.2z"/></svg></a>
+
+<script>
+const h=document.querySelector('header');
+addEventListener('scroll',()=>h.classList.toggle('solid',scrollY>60));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+document.querySelectorAll('#links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('links').classList.remove('open')));
+</script>
+</body>
+</html>
