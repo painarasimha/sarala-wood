@@ -1,19 +1,14 @@
 import type { Metadata } from 'next'
 import { Hero } from '@/components/home/Hero'
-import { StoryTeaser } from '@/components/home/StoryTeaser'
-import dynamic from 'next/dynamic'
-
-// Below the fold, and the only thing that pulls in GSAP — split it out so the
-// first screen is not waiting on it.
-const CraftSequence = dynamic(() =>
-  import('@/components/home/CraftSequence').then((m) => m.CraftSequence)
-)
-import { CollectionsGrid } from '@/components/home/CollectionsGrid'
-import { Spaces } from '@/components/home/Spaces'
-import { GalleryRail } from '@/components/home/GalleryRail'
+import { Facts } from '@/components/home/Facts'
+import { Vocabulary } from '@/components/home/Vocabulary'
+import { Collections } from '@/components/home/Collections'
+import { Story } from '@/components/home/Story'
+import { Craft } from '@/components/home/Craft'
 import { Statement } from '@/components/home/Statement'
-import { ClientsStrip } from '@/components/home/ClientsStrip'
-import { CommissionCTA } from '@/components/home/CommissionCTA'
+import { SelectedWork } from '@/components/home/SelectedWork'
+import { Clients } from '@/components/home/Clients'
+import { Commission } from '@/components/home/Commission'
 
 export const metadata: Metadata = {
   title: 'Hand-carved wooden doors & furniture — Karkala, Karnataka',
@@ -26,15 +21,15 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <div className="band-lotus" aria-hidden="true" />
-      <StoryTeaser />
-      <CraftSequence />
-      <CollectionsGrid />
-      <Spaces />
-      <GalleryRail />
+      <Facts />
+      <Vocabulary />
+      <Collections />
+      <Story />
+      <Craft />
       <Statement />
-      <ClientsStrip />
-      <CommissionCTA />
+      <SelectedWork />
+      <Clients />
+      <Commission />
     </>
   )
 }

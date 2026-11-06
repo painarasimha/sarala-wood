@@ -19,12 +19,21 @@ const SRC = join(ROOT, 'public/images/gallery')
 const OUT = join(ROOT, 'public/images/editorial')
 
 /**
+ * crop: an explicit rectangle taken before anything else.
  * trim: drop uniform white letterboxing.
  * top / bottom: additionally remove this fraction of the height, for a burnt-in
  * watermark or a hand-added label.
  * aspect: final crop ratio, centred on `position`.
  */
 const jobs = [
+  {
+    // The hero: a carved main door, cropped below the paper price tag that
+    // hangs on the upper panel in the original frame.
+    from: 'residential/main-door-frames-shutters-02.jpg',
+    to: 'hero-main-door.jpg',
+    crop: { left: 150, top: 620, width: 1200, height: 1345 },
+    width: 1200,
+  },
   {
     from: 'residential/tv-unit-wall-partition-55.jpg',
     to: 'hero-carved-teak-panel.jpg',
@@ -111,6 +120,10 @@ await mkdir(OUT, { recursive: true })
 
 for (const job of jobs) {
   let img = sharp(join(SRC, job.from))
+
+  if (job.crop) {
+    img = img.extract(job.crop)
+  }
 
   if (job.trim) {
     img = img.trim({ background: '#ffffff', threshold: 22 })

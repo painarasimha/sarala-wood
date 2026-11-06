@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { galleryItems } from '@/content/gallery'
+import { galleryItems, trimForClient } from '@/content/gallery'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { ProjectsGallery } from '@/components/gallery/ProjectsGallery'
 
@@ -25,7 +25,7 @@ export default function ProjectsPage() {
         lead={`Every photograph here is work that left the Nandalike workshop — ${galleryItems.length} of them, filed the way we file them: by the space they went into and the thing they are.`}
       />
       <section className="surface-paper">
-        <ProjectsGallery items={galleryItems} space="all" />
+        <ProjectsGallery items={trimForClient(galleryItems)} space="all" />
       </section>
     </>
   )

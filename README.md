@@ -3,8 +3,8 @@
 The website for a heritage wood-carving workshop at Nandalike, Karkala Taluk,
 Udupi District, Karnataka — founded in 1986 by Mrs. Sarala Hegde.
 
-Next.js (App Router) · TypeScript · Tailwind CSS · GSAP + ScrollTrigger · Lenis ·
-Framer Motion · Resend.
+Next.js (App Router) · TypeScript · Tailwind CSS · Lenis · Framer Motion ·
+Resend.
 
 ---
 
@@ -61,7 +61,8 @@ objects come from — the types and the components stay as they are.
 | `content/collections.ts` | The four product lines: copy, hero image, commission options, timber |
 | `content/story.ts` | Founder story, timeline, values, the four craft stages, the three spaces |
 | `content/clients.ts` | The 39 named clients, the four logo files, the Clients-page copy |
-| `content/gallery.ts` | Hand-picked selections for the home rail and the craft details |
+| `content/gallery.ts` | Hand-picked selections for the craft details |
+| `content/vocabulary.ts` | The six carving motifs — read the header before editing |
 | `content/gallery.generated.ts` | **Generated** — do not edit. 510 photographs with dimensions and blur placeholders |
 
 Anything the client still owes is written as `{{TODO: … }}` and listed in
@@ -100,38 +101,57 @@ app/                     routes, metadata, sitemap, robots, OG image
   projects/[space]/      one prerendered page per space, not a query parameter
   actions/enquiry.ts     server action → Resend, with Zod validation + honeypot
 components/
-  layout/                header, footer, preloader, cursor, smooth scroll, page transition
-  ornament/              the SVG motif library (lotus, vine, kalasha, bead-and-reel…)
-  ui/                    reveals, frames, arch masks, magnetic links, page header
+  layout/                header, footer, smooth scroll, WhatsApp button
+  ornament/              the six motifs, the house mark and the seal
+  ui/                    plate, section scaffolding, reveals, CSS entrances, page header
   home/ gallery/ …       page sections
-content/                 all copy and data (above)
+content/                 all copy and data (above), including vocabulary.ts
 lib/                     motion vocabulary, WhatsApp deep links
-scripts/                 gallery manifest, editorial crops, textures, screenshots
+scripts/                 gallery manifest, editorial crops, screenshots
 ```
 
 ### The design system
 
-`/styleguide` renders the whole thing — palette, surfaces, type scale, the
-ornament library, controls, frames and the motion timings. It is `noindex` and
-not linked from the site.
+`/styleguide` renders the whole thing — palette, patterns, type scale, the six
+motifs, the plate, controls and motion timings. It is `noindex` and not linked
+from the site.
 
-- **Palette** ebony `#1c120c` · rosewood `#3a2016` · teak `#6b3f22` ·
-  honey `#b9814a` · brass `#c9a35f` · sandalwood `#efe3cf` · ivory `#f8f2e7`
-- **Type** Cormorant Garamond (display, italics as the accent voice) + Manrope
-  (body and UI), both via `next/font` with a strict `clamp()` scale
-- **Surfaces** `.surface-wood`, `.surface-sandal` and `.surface-paper` alternate
-  down every page. The wood grain is two layers of noise at different
-  frequencies, baked to seamless WebP tiles by `npm run textures` — the noise is
-  tileable by construction, so there is no seam at any size. It started as
-  inline `feTurbulence`, which looked identical but had to be re-run by the
-  browser on every rasterisation and cost about a second of load time on a
-  phone
-- **Motion** one ease — `cubic-bezier(0.22, 0.75, 0.2, 1)` — at 620ms for the
-  first screen and 600 / 900 / 1200ms thereafter. Nothing bounces
+The governing idea: **the page is paper, and the only wood on it is the work
+itself.** The previous version made the interface out of the same material as
+the product, so the carving disappeared into the chrome.
+
+- **Palette** paper `#F3EEE4` · paper-2 `#EDE6D8` · mat `#FDFBF7` ·
+  bronze `#855D34` · ink `#191310` · dark `#15110E` · dark-ink `#E9E1D2`.
+  Every pairing used on the site clears WCAG AA — bronze started at `#8A6238`
+  and was darkened because it only reached 4.35:1 on the paper-2 sections.
+- **Type** EB Garamond throughout, with Marcellus — Roman inscriptional
+  capitals, letterforms that were *cut* — for labels and small caps. Two
+  families, both serif, no UI sans.
+- **Patterns** three, each traced from carving visible in the workshop's own
+  photographs and defined as an inline SVG data-URI in `globals.css`:
+  the **diamond diaper** from the pilasters (the page texture, at about 3%),
+  the **pierced jaali** from the mantapa screens (the top inlay and the screen
+  behind the dark section), and the **bead-and-reel** from the door mouldings
+  (the rule between sections).
+- **The plate** every photograph is mounted: a white mount, a hairline and four
+  carved corner marks, with the caption beneath rather than over the picture.
+  This is deliberate — their photographs are phone shots against workshop
+  walls, and mounting flatters them where a full-bleed crop exposes them.
+- **Motion** one ease, `cubic-bezier(0.2, 0.7, 0.2, 1)`. 500ms for hovers,
+  620ms for the first screen (in CSS), 800ms for reveals on scroll.
 
 Tailwind's opacity scale is extended to every whole percent in
 `tailwind.config.ts`: the default ships only multiples of five, so a class like
-`text-brass/72` would otherwise produce no rule at all and fail silently.
+`text-bronze/72` would otherwise produce no rule at all and fail silently.
+
+### The vocabulary section
+
+`/` and `/the-craft` both carry a section naming six carving motifs. Read
+`content/vocabulary.ts` before editing it — it documents exactly which parts are
+verified against the photographs and which are our words rather than the
+workshop's. Three of the names (padma, kalasha, jaali) are standard terms safe
+to attribute; the rest are described in plain English on purpose, and the copy
+never claims the workshop uses this vocabulary with customers.
 
 ### Why the gallery filter is a route
 
@@ -147,17 +167,18 @@ deep link and should feel instant.
 ### Motion and `prefers-reduced-motion`
 
 Every animation is off under `prefers-reduced-motion: reduce`: Lenis never
-starts, the preloader never shows, the pinned craft sequence is not pinned, the
-custom cursor is not rendered, and reveals render in place.
+starts, the CSS entrances do not run, and reveals render in place.
 
 Three things worth knowing if you work on this:
 
 - **The first screen never waits for JavaScript.** `EnterLines` / `EnterUp`
-  (used by the hero and every page header) animate in CSS, and the preloader is
-  gated by a four-line inline script in `<head>` rather than a React effect.
-  A JS-gated headline is invisible without scripts, and on a throttled phone it
-  pushes Largest Contentful Paint seconds late. Below the fold, `Reveal` and
-  `RevealLines` take over, because those genuinely depend on scroll position.
+  (used by the hero and every page header) animate in CSS. A JS-gated headline
+  is invisible without scripts, and on a throttled phone it pushes Largest
+  Contentful Paint seconds late. Below the fold, `Reveal` takes over, because
+  that genuinely depends on scroll position.
+- **`EnterUp` translates but does not fade.** An element at `opacity: 0` has
+  not been painted, so fading the first screen in delays Largest Contentful
+  Paint by the whole length of the animation. Sliding alone reads the same.
 - **Reveals latch.** `useRevealed` (`lib/motion.ts`) treats an element as seen
   once an IntersectionObserver sees it, *or* once it is at or above the fold.
   The observer alone is not enough — its first callback is async, so a page
@@ -172,7 +193,7 @@ Three things worth knowing if you work on this:
 
 ### Accessibility
 
-Semantic landmarks, a skip link, visible brass focus rings everywhere, labelled
+Semantic landmarks, a skip link, visible bronze focus rings everywhere, labelled
 form fields with inline errors, alt text on every photograph, and a keyboard-
 and swipe-navigable lightbox (arrows, Escape, trapped focus). The mobile menu
 traps focus, closes on Escape and returns focus to the button that opened it.
@@ -183,14 +204,23 @@ Lighthouse, mobile preset, against `next start` on a quiet machine:
 
 | Page | Perf | A11y | Best practices | SEO |
 |---|---|---|---|---|
-| Home | 93 | 100 | 100 | 100 |
-| Projects (and each space) | 90–91 | 100 | 100 | 100 |
-| Collections | 94 | 100 | 100 | 100 |
-| Collection detail (×4) | 93–94 | 100 | 100 | 100 |
-| Our Story | 92 | 100 | 100 | 100 |
-| The Craft | 93 | 100 | 100 | 100 |
-| Clients | 93 | 100 | 100 | 100 |
-| Contact | 94 | 100 | 100 | 100 |
+| Home | 96 | 100 | 100 | 100 |
+| Collections | 92 | 100 | 100 | 100 |
+| Collection detail | 91 | 100 | 100 | 100 |
+| Projects (all 510) | 86 | 100 | 100 | 100 |
+| Projects — Residential | 95 | 100 | 100 | 100 |
+| Projects — Places of Worship | 100 | 100 | 100 | 100 |
+| Our Story | 91 | 100 | 100 | 100 |
+| The Craft | 91 | 100 | 100 | 100 |
+| Clients | 96 | 100 | 100 | 100 |
+| Contact | 96 | 100 | 100 | 100 |
+
+`/projects` is the one page under 90. It is the index of all 510 photographs,
+so its document is the largest on the site and its Largest Contentful Paint is
+a gallery tile at about 4.3s under Lighthouse's simulated 1.6 Mbps link. The
+per-space routes that the navigation and the home page actually link to score
+95–100. If it matters, the fix is to paginate the index server-side rather than
+hand the client every item for filtering.
 
 Cumulative Layout Shift is 0 on every page and Total Blocking Time is under
 20 ms. Largest Contentful Paint is 3.1–3.7 s under Lighthouse's simulated slow
@@ -209,13 +239,20 @@ change them:
 
 - **The first screen never waits for JavaScript** (see below). Gating the
   headline on hydration cost roughly a second and a half of LCP.
-- **The wood grain is a baked WebP tile, not `feTurbulence`.** The filter was
-  re-run by the browser on every rasterisation; replacing it moved the gallery
-  pages from 80 to 91.
+- **The page texture is an inline SVG data-URI, not a filter.** An earlier
+  version used `feTurbulence`, which the browser re-ran on every rasterisation
+  and which cost about a second of load on a phone.
 - **The gallery filter is a route, not a query parameter** — see below.
-- **The preloader panels use a gradient, not the wood texture.** Give them a
-  background *image* and the browser scores the curtain as the Largest
-  Contentful Paint, so the metric measures the loader instead of the page.
+- **The first image on each page carries `priority`.** These are image-LCP
+  pages now; discovering the largest picture lazily costs about a second.
+- **EB Garamond is pinned to weight 400.** Left unpinned, `next/font` ships the
+  full variable font — 158 KB across two files for an axis the site never uses.
+  Pinning it took the page's font payload from 201 KB to 60 KB and lifted every
+  page by five to ten points.
+- **The gallery payload is trimmed.** `trimForClient` in `content/gallery.ts`
+  drops the blur placeholder past the first two dozen tiles and the duplicated
+  alt sentence (rebuilt identically on render), taking the `/projects` document
+  from 461 KB to 338 KB.
 
 ### SEO
 
@@ -225,6 +262,14 @@ a drawn `opengraph-image`, `sitemap.xml`, `robots.txt`, and `Organization` +
 phone and the four product lines.
 
 ---
+
+## The approved concept
+
+`concept/index.html` is the standalone design concept this site was built from,
+with its own copy of the images in `concept/img/` so it opens anywhere without
+a server. `sarala-concept.zip` is the same folder, ready to send to the client.
+Neither is part of the build; they are kept as the reference the implementation
+was signed off against.
 
 ## Repository size
 
@@ -247,10 +292,6 @@ npm run screenshots                    # → /screenshots, desktop + mobile
 Every page at 1440px and 390px, full height, 1.5× device pixel ratio, as JPEG.
 Pass a name to redo one: `node scripts/screenshots.mjs "" home`.
 
-The home page capture has a long blank stretch after The Craft. That is the
-pinned ScrollTrigger section doing its job: it reserves two viewport heights of
-scroll so the four stages can advance in place, and a full-page screenshot
-renders that reserve as empty space. On a real screen there is no gap.
 
 ## Scripts
 

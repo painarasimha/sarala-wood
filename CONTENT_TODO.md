@@ -99,6 +99,23 @@ another, and which the workshop recommends for which piece.
 ### Contact (`content/site.ts`)
 - **Visiting hours** at the Nandalike workshop.
 
+### The carving vocabulary (`content/vocabulary.ts`)
+The site now names six carving motifs, on the home page and on The Craft. The
+**drawings are verified** — each motif was checked against close crops of the
+workshop's own photographs before it was drawn. The **names are ours**, because
+the workshop has never published any.
+
+Three are standard terms that are safe to attribute — *padma*, *kalasha*,
+*jaali*. The other three are described in plain English (*running vine*,
+*bead moulding*, *diamond diaper*) rather than given invented Sanskrit names,
+and the copy deliberately never says the workshop uses this vocabulary with
+customers.
+
+- [ ] Show the six to Mr. Hegde. If the carvers have their own names — in
+      Kannada or Tulu — his words beat ours, and this section gets much better
+      for it. If he confirms the Sanskrit terms are used in the workshop, the
+      copy can say so directly.
+
 ---
 
 ## 5. Things deliberately *not* written

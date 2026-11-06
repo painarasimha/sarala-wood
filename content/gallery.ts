@@ -76,3 +76,28 @@ export const detailSelection: DetailItem[] = (
   })
 
 export const galleryCount = galleryItems.length
+
+/**
+ * The gallery payload trimmed for the client.
+ *
+ * A blur placeholder is ~144 bytes of base64; carrying one for all 510
+ * photographs puts ~70 KB of inert data in the document, which on a throttled
+ * connection delays the first tiles — the very thing the blur exists to cover.
+ * The tiles that can be on screen before any scrolling keep theirs; the rest
+ * fade up from the mount colour instead.
+ */
+export function trimForClient(items: GalleryItem[], withBlur = 24): GalleryItem[] {
+  return items.map((item, i) => ({
+    ...item,
+    blurDataURL: i < withBlur ? item.blurDataURL : '',
+    // Each alt is a ~110-character sentence; 510 of them is another ~55 KB of
+    // document. The gallery rebuilds the identical string from the labels it
+    // already has, so the rendered alt text is unchanged.
+    alt: '',
+  }))
+}
+
+/** Rebuilds the manifest's alt text from fields already in the payload. */
+export const altFor = (item: GalleryItem) =>
+  item.alt ||
+  `${item.subcategoryLabel} hand-carved by Sarala Wood Industries — ${item.categoryLabel.toLowerCase()} work, Karkala, Karnataka`

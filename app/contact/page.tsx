@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { site } from '@/content/site'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Section } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
 import { EnquiryForm } from '@/components/contact/EnquiryForm'
-import { OrnamentDivider } from '@/components/ornament/Ornaments'
 import { whatsappLink } from '@/lib/whatsapp'
 
 export const metadata: Metadata = {
@@ -19,21 +19,18 @@ export default function ContactPage() {
     <>
       <PageHeader
         eyebrow="Commission a piece"
-        title={[<>Tell us the room.</>, <>We will tell you</>, <><em key="e" className="accent">what it can hold.</em></>]}
+        title={[<>Tell us the room.</>, <>We will tell you</>, <><em key="e" className="italic text-bronze">what it can hold.</em></>]}
         lead="Four short questions and we will have enough to come back to you. If you would rather talk, the workshop answers the phone."
       />
 
-      <section className="surface-wood py-section lg:py-section-lg">
-        <div className="wrap grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-[6vw]">
-          {/* ---------- Details ---------- */}
+      <Section index="I">
+        <div className="grid gap-[clamp(2.5rem,5vw,4rem)] md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-x-[clamp(2.5rem,5.5vw,4.5rem)]">
           <Reveal>
             <dl className="grid gap-8">
               <div>
-                <dt className="font-sans text-eyebrow font-semibold uppercase text-brass">
-                  The workshop
-                </dt>
+                <dt className="label">The workshop</dt>
                 <dd className="mt-3">
-                  <address className="not-italic font-serif text-[1.42rem] leading-snug text-sandalwood">
+                  <address className="not-italic font-serif text-[1.35rem] leading-snug">
                     {site.address.street}
                     <br />
                     {site.address.taluk}
@@ -44,7 +41,7 @@ export default function ContactPage() {
                     href={site.mapsLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="link-draw mt-3 inline-block font-sans text-eyebrow font-semibold uppercase text-brass"
+                    className="lnk mt-4"
                   >
                     Open in Maps
                   </a>
@@ -52,16 +49,16 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <dt className="font-sans text-eyebrow font-semibold uppercase text-brass">Call</dt>
+                <dt className="label">Call</dt>
                 <dd className="mt-3 flex flex-col gap-1.5">
                   {site.phones.map((phone) => (
                     <a
                       key={phone.tel}
                       href={`tel:${phone.tel}`}
-                      className="link-draw w-fit font-serif text-[1.32rem] text-sandalwood"
+                      className="w-fit border-b border-ink/14 font-serif text-[1.28rem] transition-colors duration-500 ease-carve hover:border-ink"
                     >
                       {phone.number}
-                      <span className="ml-2 font-sans text-[0.75rem] font-semibold uppercase tracking-[0.2em] text-brass/80">
+                      <span className="ml-2 font-caps text-[0.68rem] uppercase tracking-[0.18em] text-ink-3">
                         {phone.label}
                       </span>
                     </a>
@@ -70,13 +67,13 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <dt className="font-sans text-eyebrow font-semibold uppercase text-brass">Write</dt>
+                <dt className="label">Write</dt>
                 <dd className="mt-3 flex flex-col gap-1.5">
                   {site.emails.map((email) => (
                     <a
                       key={email}
                       href={`mailto:${email}`}
-                      className="link-draw w-fit font-serif text-[1.22rem] text-sandalwood"
+                      className="w-fit border-b border-ink/14 font-serif text-[1.18rem] transition-colors duration-500 ease-carve hover:border-ink"
                     >
                       {email}
                     </a>
@@ -85,14 +82,9 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <dt className="font-sans text-eyebrow font-semibold uppercase text-brass">
-                  Visiting hours
-                </dt>
-                <dd className="mt-3 max-w-prose text-small italic text-sandalwood/65">
-                  {site.hours}
-                </dd>
+                <dt className="label">Visiting hours</dt>
+                <dd className="mt-3 max-w-prose text-cap italic text-ink-3">{site.hours}</dd>
               </div>
-
             </dl>
 
             <a
@@ -105,47 +97,46 @@ export default function ContactPage() {
             </a>
           </Reveal>
 
-          {/* ---------- Form ---------- */}
-          <Reveal delay={0.08}>
+          <Reveal delay={0.06}>
             <Suspense
-              fallback={
-                <div className="border border-brass/25 p-10 text-small text-sandalwood/60">
-                  Loading the enquiry form…
-                </div>
-              }
+              fallback={<div className="border border-ink/14 p-10 text-small text-ink-3">Loading the enquiry form…</div>}
             >
               <EnquiryForm />
             </Suspense>
           </Reveal>
         </div>
-      </section>
+      </Section>
 
-      {/* ---------- Map ---------- */}
-      <section className="surface-paper py-section">
-        <div className="wrap">
-          <Reveal className="mb-10 text-center">
-            <OrnamentDivider className="mb-9" tone="honey" />
-            <h2 className="font-serif text-d3">Nandalike, Karkala Taluk.</h2>
-            <p className="mx-auto mt-4 max-w-prose text-muted">
-              An hour inland from Udupi, in the hills behind the coast. Visitors are welcome — call
-              ahead and we will have the workshop open.
-            </p>
+      <div className="bg-paper-2">
+        <Section index="II">
+          <Reveal>
+            <div className="mb-10 text-center">
+              <h2 className="text-d2">Nandalike, Karkala Taluk.</h2>
+              <p className="mx-auto mt-4 max-w-prose text-ink-2">
+                An hour inland from Udupi, in the hills behind the coast. Visitors are welcome —
+                call ahead and we will have the workshop open.
+              </p>
+            </div>
           </Reveal>
 
           <Reveal delay={0.06}>
-            <div className="brass-frame relative aspect-[16/10] w-full overflow-hidden border border-teak/20 sm:aspect-[21/9]">
-              <iframe
-                src={site.mapsEmbedSrc}
-                title={`Map showing ${site.name} at ${site.address.oneLine}`}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-                className="h-full w-full grayscale-[0.35] sepia-[0.25]"
-              />
+            <div className="plate">
+              <span className="plate-corner plate-corner-tr" aria-hidden="true" />
+              <span className="plate-corner plate-corner-bl" aria-hidden="true" />
+              <div className="relative aspect-[16/10] w-full overflow-hidden sm:aspect-[21/9]">
+                <iframe
+                  src={site.mapsEmbedSrc}
+                  title={`Map showing ${site.name} at ${site.address.oneLine}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                  className="h-full w-full grayscale-[0.3] sepia-[0.15]"
+                />
+              </div>
             </div>
           </Reveal>
-        </div>
-      </section>
+        </Section>
+      </div>
     </>
   )
 }

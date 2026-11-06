@@ -9,13 +9,11 @@
     "lint": "next lint",
     "gallery": "node scripts/build-gallery.mjs",
     "editorial": "node scripts/build-editorial.mjs",
-    "textures": "node scripts/build-textures.mjs",
     "screenshots": "node scripts/screenshots.mjs",
-    "assets": "npm run textures && npm run editorial && npm run gallery"
+    "assets": "npm run editorial && npm run gallery"
   },
   "dependencies": {
     "framer-motion": "11.18.2",
-    "gsap": "3.12.5",
     "lenis": "1.1.18",
     "next": "^16.4.3",
     "react": "^19.2.0",

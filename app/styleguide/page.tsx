@@ -1,17 +1,18 @@
 import type { Metadata } from 'next'
+import { vocabulary } from '@/content/vocabulary'
 import {
-  BeadAndReel,
-  CornerBracket,
-  DiamondBullet,
+  BeadMoulding,
+  DiamondDiaper,
+  HouseMark,
+  Jaali,
   Kalasha,
-  Lotus,
-  OrnamentDivider,
-  TempleArch,
-  VineScroll,
-  YearSeal,
+  Lozenge,
+  Padma,
+  PatraLata,
+  Seal,
 } from '@/components/ornament/Ornaments'
-import { BrassFrame } from '@/components/ui/Frames'
-import { PageHeader } from '@/components/ui/PageHeader'
+import { BeadRule, JaaliBand } from '@/components/ui/Section'
+import { Plate, PlateImage } from '@/components/ui/Plate'
 
 export const metadata: Metadata = {
   title: 'Styleguide',
@@ -20,159 +21,190 @@ export const metadata: Metadata = {
 }
 
 const PALETTE = [
-  ['Ebony', '#1c120c', 'bg-ebony'],
-  ['Rosewood', '#3a2016', 'bg-rosewood'],
-  ['Teak', '#6b3f22', 'bg-teak'],
-  ['Honey', '#b9814a', 'bg-honey'],
-  ['Brass', '#c9a35f', 'bg-brass'],
-  ['Sandalwood', '#efe3cf', 'bg-sandalwood'],
-  ['Ivory', '#f8f2e7', 'bg-ivory'],
+  ['Paper', '#F3EEE4', 'bg-paper'],
+  ['Paper 2', '#EDE6D8', 'bg-paper-2'],
+  ['Mat', '#FDFBF7', 'bg-mat'],
+  ['Bronze', '#855D34', 'bg-bronze'],
+  ['Bronze 2', '#A98247', 'bg-bronze-2'],
+  ['Ink 3', '#756657', 'bg-ink-3'],
+  ['Ink 2', '#4C4137', 'bg-ink-2'],
+  ['Ink', '#191310', 'bg-ink'],
+  ['Dark', '#15110E', 'bg-dark'],
+] as const
+
+const MOTIFS = [
+  ['Padma', Padma],
+  ['Kalasha', Kalasha],
+  ['Running vine', PatraLata],
+  ['Jaali', Jaali],
+  ['Bead moulding', BeadMoulding],
+  ['Diamond diaper', DiamondDiaper],
 ] as const
 
 export default function StyleguidePage() {
   return (
     <>
-      <PageHeader
-        eyebrow="Internal"
-        title={[<>The design</>, <><em key="e" className="accent">system.</em></>]}
-        lead="Every colour, type size, ornament and control used on this site, in one place. Not linked from the site and not indexed."
-      />
+      <header className="pb-10 pt-[clamp(3rem,6vw,5rem)]">
+        <div className="wrap">
+          <p className="label">Internal</p>
+          <h1 className="mt-5 max-w-[16ch] text-d1">
+            The design <em className="italic text-bronze">system.</em>
+          </h1>
+          <p className="mt-7 max-w-prose text-lead text-ink-2">
+            Every colour, type size, motif and control used on this site, in one place. Not linked
+            from the site and not indexed.
+          </p>
+        </div>
+      </header>
 
-      {/* ---------- Palette ---------- */}
-      <Section title="Palette" note="Dark wood sections alternate with ivory paper sections.">
-        <ul className="grid gap-4 sm:grid-cols-4 lg:grid-cols-7">
+      <Block title="Palette" note="Paper, not timber — the only wood on the page is the work itself.">
+        <ul className="grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-9">
           {PALETTE.map(([name, hex, bg]) => (
             <li key={name}>
-              <span className={`block aspect-square border border-teak/20 ${bg}`} />
-              <p className="mt-2 font-sans text-eyebrow font-semibold uppercase text-muted">{name}</p>
-              <p className="font-serif text-[0.95rem] text-teak">{hex}</p>
+              <span className={`block aspect-square border border-ink/14 ${bg}`} />
+              <p className="label label-mute mt-2 text-[0.64rem]">{name}</p>
+              <p className="font-serif text-[0.9rem] text-ink-2">{hex}</p>
             </li>
           ))}
         </ul>
-      </Section>
+      </Block>
 
-      {/* ---------- Surfaces ---------- */}
-      <Section title="Surfaces" note="Procedural wood grain, ivory paper, and the sitewide film grain.">
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="surface-wood grid h-44 place-items-center">
-            <span className="font-sans text-eyebrow font-semibold uppercase text-brass">surface-wood</span>
+      <Block
+        title="Patterns"
+        note="Traced from the carving in the workshop's own photographs. The diaper is the page texture; the jaali is an inlay; the bead is the rule between sections."
+      >
+        <div className="grid gap-6">
+          <div>
+            <Label>Diamond diaper — the page itself, at 3%</Label>
+            <div className="h-24 border border-ink/14" />
           </div>
-          <div className="surface-sandal grid h-44 place-items-center border border-teak/15">
-            <span className="font-sans text-eyebrow font-semibold uppercase text-muted">surface-sandal</span>
+          <div>
+            <Label>Jaali band</Label>
+            <JaaliBand />
           </div>
-          <div className="surface-paper grid h-44 place-items-center border border-teak/15">
-            <span className="font-sans text-eyebrow font-semibold uppercase text-muted">surface-paper</span>
+          <div>
+            <Label>Bead and reel rule</Label>
+            <BeadRule />
+          </div>
+          <div>
+            <Label>The dark ground, with the jaali behind it</Label>
+            <div className="surface-dark grid h-40 place-items-center">
+              <span className="label">surface-dark</span>
+            </div>
           </div>
         </div>
-        <div className="band-lotus mt-6" />
-      </Section>
+      </Block>
 
-      {/* ---------- Type ---------- */}
-      <Section title="Typography" note="Cormorant Garamond for display and italic accents; Manrope for body and UI.">
+      <Block title="Typography" note="EB Garamond throughout; Marcellus — Roman inscriptional capitals — for labels.">
         <div className="grid gap-8">
           <div>
-            <Label>Display 1 · clamp(3rem, 8.2vw, 7.4rem)</Label>
-            <p className="font-serif text-d1 text-rosewood">
-              Carved by <em className="accent">hand.</em>
+            <Label>Display 1</Label>
+            <p className="text-d1">
+              Carved by <em className="italic text-bronze">hand.</em>
             </p>
           </div>
           <div>
             <Label>Display 2</Label>
-            <p className="font-serif text-d2 text-rosewood">From log to heirloom.</p>
+            <p className="text-d2">From log to heirloom.</p>
           </div>
           <div>
             <Label>Display 3</Label>
-            <p className="font-serif text-d3 text-rosewood">Made for the way you live.</p>
+            <p className="text-d3">Doors &amp; Windows</p>
           </div>
           <div>
-            <Label>Display 4</Label>
-            <p className="font-serif text-d4 text-rosewood">Doors &amp; Windows</p>
-          </div>
-          <div>
-            <Label>Eyebrow</Label>
-            <p className="eyebrow">Heritage woodcraft · Karkala, Karnataka</p>
+            <Label>Label — Marcellus caps</Label>
+            <p className="label">Hand-carved woodwork · Karkala, Karnataka</p>
           </div>
           <div>
             <Label>Lead</Label>
-            <p className="max-w-prose text-lead font-light text-muted">
-              Since 1986, our craftsmen have turned seasoned timber into doors, furniture and sacred
-              spaces.
+            <p className="max-w-prose text-lead text-ink-2">
+              Since 1986 we have carved doors and frames, wardrobes, furniture and modular
+              kitchens to order at Nandalike.
             </p>
           </div>
           <div>
-            <Label>Body with drop cap</Label>
-            <p className="dropcap max-w-prose text-muted">
-              It began in 1986, when Mrs. Sarala Hegde realised how much potential there was for
-              heritage and carved wooden furniture in home décor. Many would have frowned at the idea.
-            </p>
+            <Label>Caption</Label>
+            <p className="cap">Main door &amp; frame · carved teak</p>
           </div>
           <div>
-            <Label>Roman numerals</Label>
+            <Label>Numeral</Label>
             <p className="flex gap-6">
-              {['i', 'ii', 'iii', 'iv'].map((n) => (
-                <span key={n} className="numeral text-[2rem]">
-                  {n}.
+              {['I', 'II', 'III', 'IV'].map((n) => (
+                <span key={n} className="numeral text-[1.4rem]">
+                  {n}
                 </span>
               ))}
             </p>
           </div>
         </div>
-      </Section>
+      </Block>
 
-      {/* ---------- Ornaments ---------- */}
-      <Section title="Ornament library" note="Original motifs drawn from coastal-Karnataka temple woodwork.">
-        <ul className="grid gap-8 sm:grid-cols-3 lg:grid-cols-6">
-          {[
-            ['Lotus', <Lotus key="a" className="h-16 w-20" stroke="#b9814a" />],
-            ['Kalasha', <Kalasha key="b" className="h-16 w-10" stroke="#b9814a" />],
-            ['Temple arch', <TempleArch key="c" className="h-16 w-12" stroke="#b9814a" />],
-            ['Corner bracket', <CornerBracket key="d" className="h-16 w-16" stroke="#b9814a" />],
-            ['Diamond bullet', <DiamondBullet key="e" className="h-9 w-9" stroke="#b9814a" />],
-            ['Year seal', <YearSeal key="f" className="scale-[0.55]" />],
-          ].map(([name, node]) => (
-            <li key={name as string} className="grid place-items-center gap-3 border border-teak/15 p-6">
-              <span className="grid h-20 place-items-center">{node as React.ReactNode}</span>
-              <span className="font-sans text-eyebrow font-semibold uppercase text-muted">
-                {name as string}
-              </span>
+      <Block title="Motifs" note="Six marks, each one visible in their work. See content/vocabulary.ts for what is verified and what still needs the workshop's own words.">
+        <ul className="grid grid-cols-2 gap-px border border-ink/8 bg-ink/8 sm:grid-cols-3 lg:grid-cols-6">
+          {MOTIFS.map(([name, Motif]) => (
+            <li key={name} className="grid place-items-center gap-3 bg-mat p-6 text-center">
+              <Motif className="h-16 w-16 text-bronze" />
+              <span className="label label-mute text-[0.64rem]">{name}</span>
             </li>
           ))}
         </ul>
 
-        <div className="mt-10 grid gap-8">
-          <div>
-            <Label>Vine scroll — repeats seamlessly</Label>
-            <VineScroll className="h-10 w-full" stroke="#b9814a" />
+        <div className="mt-8 grid grid-cols-3 gap-px border border-ink/8 bg-ink/8 sm:grid-cols-3">
+          <div className="grid place-items-center gap-3 bg-mat p-6">
+            <HouseMark className="h-12 w-12" />
+            <span className="label label-mute text-[0.64rem]">House mark</span>
           </div>
-          <div>
-            <Label>Bead and reel</Label>
-            <BeadAndReel className="h-5 w-full" stroke="#b9814a" />
+          <div className="grid place-items-center gap-3 bg-mat p-6">
+            <Seal className="h-12 w-12 text-bronze" />
+            <span className="label label-mute text-[0.64rem]">Seal</span>
           </div>
-          <div>
-            <Label>Section divider</Label>
-            <OrnamentDivider tone="honey" />
+          <div className="grid place-items-center gap-3 bg-mat p-6">
+            <Lozenge />
+            <span className="label label-mute text-[0.64rem]">Lozenge</span>
           </div>
         </div>
-      </Section>
 
-      {/* ---------- Controls ---------- */}
-      <Section title="Controls" note="Brass fills from the bottom; underlines draw from the left.">
+        <dl className="mt-8 grid gap-px border border-ink/8 bg-ink/8 sm:grid-cols-2 lg:grid-cols-3">
+          {vocabulary.map((item) => (
+            <div key={item.name} className="bg-mat p-6">
+              <dt className="font-serif text-[1.15rem]">
+                {item.name} <span className="italic text-ink-3">{item.gloss}</span>
+              </dt>
+              <dd className="label label-mute mt-2 text-[0.64rem]">{item.seenOn}</dd>
+            </div>
+          ))}
+        </dl>
+      </Block>
+
+      <Block title="The plate" note="How every photograph is presented: a white mount, a hairline and four carved corner marks.">
+        <div className="max-w-sm">
+          <Plate>
+            <PlateImage
+              src="/images/editorial/story-carved-main-door.jpg"
+              alt="Carved main door detail"
+              sizes="380px"
+              aspect="4/5"
+            />
+          </Plate>
+          <p className="cap mt-3">Caption sits beneath, never over the picture</p>
+        </div>
+      </Block>
+
+      <Block title="Controls">
         <div className="flex flex-wrap items-center gap-5">
-          <button className="btn btn-ink">Ink outline</button>
-          <a href="#controls" className="link-draw font-sans text-eyebrow font-semibold uppercase text-teak">
-            Underline draws
+          <button className="btn">Outline</button>
+          <button className="btn btn-fill">Filled</button>
+          <a href="#controls" className="lnk">
+            Underlined link
           </a>
         </div>
 
-        <div className="surface-wood mt-8 flex flex-wrap items-center gap-5 p-9">
-          <button className="btn">Brass outline</button>
-          <button className="btn btn-solid">Brass solid</button>
-          <a href="#controls" className="link-draw font-sans text-eyebrow font-semibold uppercase text-brass">
-            On wood
-          </a>
+        <div className="surface-dark mt-8 flex flex-wrap items-center gap-5 p-9">
+          <button className="btn btn-light">On the dark ground</button>
+          <span className="label">Label on dark</span>
         </div>
 
-        <div className="surface-wood mt-4 grid gap-6 p-9 sm:grid-cols-2">
+        <div className="mt-6 grid gap-6 border border-ink/14 p-8 sm:grid-cols-2">
           <label className="block">
             <span className="field-label">Your name</span>
             <input className="field-input" placeholder="Enter your name" />
@@ -182,52 +214,25 @@ export default function StyleguidePage() {
             <input className="field-input" placeholder="+91" />
           </label>
         </div>
-      </Section>
+      </Block>
 
-      {/* ---------- Frames ---------- */}
-      <Section title="Frames & masks" note="Inset brass hairline with carved corners; temple-arch image mask.">
-        <div className="grid gap-8 sm:grid-cols-2">
-          <div className="surface-wood relative grid h-64 place-items-center">
-            <BrassFrame inset="inset-5" animate={false} />
-            <span className="font-sans text-eyebrow font-semibold uppercase text-brass">Brass frame</span>
-          </div>
-          <div className="relative grid h-64 place-items-center">
-            <span className="grid h-full w-44 place-items-center rounded-arch border border-honey/60 bg-sandalwood">
-              <span className="font-sans text-eyebrow font-semibold uppercase text-muted">Arch mask</span>
-            </span>
-          </div>
-        </div>
-      </Section>
-
-      {/* ---------- Motion ---------- */}
-      <Section
-        title="Motion"
-        note="One ease, cubic-bezier(0.22, 0.75, 0.2, 1), at 600ms / 900ms / 1200ms. Everything respects prefers-reduced-motion."
-      >
-        <ul className="grid gap-3 font-serif text-[1.2rem] text-teak sm:grid-cols-3">
-          <li className="border border-teak/15 p-6">600ms — links, buttons, hovers</li>
-          <li className="border border-teak/15 p-6">900ms — content reveals</li>
-          <li className="border border-teak/15 p-6">1200ms — images, clip-path wipes</li>
+      <Block title="Motion" note="One ease — cubic-bezier(0.2, 0.7, 0.2, 1). The first screen animates in CSS; everything below the fold uses a single rise-and-fade on scroll.">
+        <ul className="grid gap-3 font-serif text-[1.15rem] text-ink-2 sm:grid-cols-3">
+          <li className="border border-ink/14 p-6">500ms — links, buttons, hovers</li>
+          <li className="border border-ink/14 p-6">620ms — the first screen, in CSS</li>
+          <li className="border border-ink/14 p-6">800ms — reveals on scroll</li>
         </ul>
-      </Section>
+      </Block>
     </>
   )
 }
 
-function Section({
-  title,
-  note,
-  children,
-}: {
-  title: string
-  note?: string
-  children: React.ReactNode
-}) {
+function Block({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
   return (
-    <section id={title.toLowerCase().replace(/\W+/g, '-')} className="surface-paper border-b border-teak/10 py-16">
+    <section className="border-b border-ink/8 py-14">
       <div className="wrap">
-        <h2 className="font-serif text-d3 text-rosewood">{title}</h2>
-        {note && <p className="mt-3 max-w-prose text-small text-muted">{note}</p>}
+        <h2 className="text-d2">{title}</h2>
+        {note && <p className="mt-3 max-w-prose text-small text-ink-2">{note}</p>}
         <div className="mt-10">{children}</div>
       </div>
     </section>
@@ -235,9 +240,5 @@ function Section({
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mb-3 font-sans text-[0.75rem] font-semibold uppercase tracking-[0.24em] text-muted/70">
-      {children}
-    </p>
-  )
+  return <p className="label label-mute mb-3 text-[0.64rem]">{children}</p>
 }

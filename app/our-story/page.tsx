@@ -3,9 +3,10 @@ import Link from 'next/link'
 import { story, timeline, values } from '@/content/story'
 import { site } from '@/content/site'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Section, SectionHead } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
-import { ArchImage, RevealImage } from '@/components/ui/Frames'
-import { OrnamentDivider, YearSeal, Kalasha } from '@/components/ornament/Ornaments'
+import { Plate, PlateImage } from '@/components/ui/Plate'
+import { Kalasha, Seal } from '@/components/ornament/Ornaments'
 
 export const metadata: Metadata = {
   title: 'Our Story — a workshop at Nandalike since 1986',
@@ -19,80 +20,79 @@ export default function OurStoryPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Our Story"
-        title={[<>A home is</>, <>remembered by</>, <>its <em key="e" className="accent">wood.</em></>]}
+        eyebrow="Our story"
+        title={[<>A home is</>, <>remembered by</>, <>its <em key="e" className="italic text-bronze">wood.</em></>]}
         lead={story.lead}
       />
 
-      {/* ---------- The founding ---------- */}
-      <section className="surface-paper py-section lg:py-section-lg">
-        <div className="wrap grid items-start gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-[6vw]">
+      <Section index="I">
+        <div className="grid items-start gap-[clamp(2.5rem,5vw,4rem)] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] md:gap-x-[clamp(2.5rem,5.5vw,4.5rem)]">
           <Reveal>
-            <div className="relative mx-auto w-full max-w-[420px] lg:sticky lg:top-28 lg:max-w-none">
-              <ArchImage
-                src={story.portrait.src}
-                alt={story.portrait.alt}
-                sizes="(max-width: 1024px) 86vw, 38vw"
-              />
-              <YearSeal className="absolute -bottom-6 right-0 scale-[0.78] sm:scale-90 lg:-right-6 lg:bottom-12 lg:scale-100" />
+            <div className="md:sticky md:top-28">
+              <Plate>
+                <PlateImage
+                  src={story.portrait.src}
+                  alt={story.portrait.alt}
+                  sizes="(max-width: 768px) 92vw, 34vw"
+                  aspect="4/5"
+                />
+              </Plate>
+              <p className="cap mt-[0.8rem]">Carved main door · Nandalike workshop</p>
             </div>
           </Reveal>
 
-          <Reveal delay={0.08}>
+          <Reveal delay={0.06}>
             {story.body.map((paragraph, i) => (
-              <p key={i} className={`max-w-prose text-muted ${i === 0 ? 'dropcap' : 'mt-6'}`}>
+              <p key={i} className={`max-w-prose text-ink-2 ${i > 0 ? 'mt-[1.05rem]' : ''}`}>
                 {paragraph}
               </p>
             ))}
 
-            <div className="mt-10 border-t border-teak/20 pt-8">
-              <p className="font-serif text-[1.8rem] italic text-teak">{story.signature.name}</p>
-              <p className="mt-1 font-sans text-eyebrow font-semibold uppercase text-muted">
-                {story.signature.role}
-              </p>
-              <p className="mt-6 max-w-prose text-small italic text-muted">
-                {'{{TODO: a photograph of Mrs. Sarala Hegde, and one of Mr. Suhas Hegde, would carry this page — the site has none at present.}}'}
-              </p>
+            <div className="mt-10 flex items-center gap-4 border-t border-ink/8 pt-8">
+              <Seal className="h-9 w-9 shrink-0 text-bronze" />
+              <span>
+                <b className="block font-serif text-[1.5rem] font-normal">{story.signature.name}</b>
+                <span className="label label-mute text-[0.68rem]">{story.signature.role}</span>
+              </span>
             </div>
+            <p className="mt-6 max-w-prose text-cap italic text-ink-3">
+              {'{{TODO: a photograph of Mrs. Sarala Hegde, and one of Mr. Suhas Hegde, would carry this page — the business has none at present.}}'}
+            </p>
           </Reveal>
         </div>
-      </section>
+      </Section>
 
       {/* ---------- Timeline ---------- */}
-      <section className="surface-wood py-section lg:py-section-lg">
-        <div className="wrap">
-          <Reveal className="mb-14 max-w-[42rem]">
-            <span className="eyebrow">The years</span>
-            <h2 className="mt-4 font-serif text-d2">
-              From one workshop to <em className="accent">a name on the coast.</em>
+      <div className="surface-dark">
+        <Section index="II">
+          <Reveal>
+            <span className="label">The years</span>
+            <h2 className="mb-14 mt-4 max-w-[20ch] text-d2">
+              From one workshop to <em className="italic text-bronze-2">a name on the coast.</em>
             </h2>
           </Reveal>
 
-          <ol className="relative border-l border-brass/25 pl-8 sm:pl-12">
+          <ol className="relative border-l border-dark-ink/25 pl-8 sm:pl-12">
             {timeline.map((entry, i) => (
               <li key={entry.title} className="relative pb-12 last:pb-0">
-                <Reveal delay={i * 0.05}>
+                <Reveal delay={Math.min(i, 4) * 0.05}>
                   <span
                     className="absolute -left-[33px] top-2 grid h-3.5 w-3.5 place-items-center sm:-left-[49px]"
                     aria-hidden="true"
                   >
                     <span
                       className={`block h-2 w-2 rotate-45 ${
-                        entry.todo ? 'border border-brass/50' : 'bg-brass'
+                        entry.todo ? 'border border-bronze-2/70' : 'bg-bronze-2'
                       }`}
                     />
                   </span>
-                  <p
-                    className={`font-serif text-[1.6rem] leading-none ${
-                      entry.todo ? 'text-brass/80' : 'text-brass'
-                    }`}
-                  >
+                  <p className={`font-serif text-[1.6rem] leading-none ${entry.todo ? 'text-bronze-2/90' : 'text-bronze-2'}`}>
                     {entry.year}
                   </p>
-                  <h3 className="mt-3 font-serif text-d4 text-sandalwood">{entry.title}</h3>
+                  <h3 className="mt-3 text-d3 text-dark-ink">{entry.title}</h3>
                   <p
-                    className={`mt-3 max-w-prose text-small font-light ${
-                      entry.todo ? 'italic text-sandalwood/65' : 'text-sandalwood/75'
+                    className={`mt-3 max-w-prose text-small ${
+                      entry.todo ? 'italic text-dark-ink/60' : 'text-dark-ink/75'
                     }`}
                   >
                     {entry.body}
@@ -101,75 +101,78 @@ export default function OurStoryPage() {
               </li>
             ))}
           </ol>
-        </div>
-      </section>
+        </Section>
+      </div>
 
       {/* ---------- Values ---------- */}
-      <section className="surface-paper py-section lg:py-section-lg">
-        <div className="wrap">
-          <Reveal className="mx-auto mb-14 max-w-[38rem] text-center">
-            <Kalasha className="mx-auto h-16 w-10 opacity-80" stroke="#b9814a" />
-            <h2 className="mt-7 font-serif text-d2">What has not changed.</h2>
-          </Reveal>
+      <Section index="III">
+        <Reveal>
+          <div className="mx-auto mb-14 max-w-[38rem] text-center">
+            <Kalasha className="mx-auto h-16 w-10 text-bronze" />
+            <h2 className="mt-7 text-d2">What has not changed.</h2>
+          </div>
+        </Reveal>
 
-          <ul className="grid gap-px border border-teak/20 bg-teak/20 sm:grid-cols-2">
-            {values.map((value, i) => (
-              <li key={value.title} className="h-full bg-ivory p-8 lg:p-11">
-                <Reveal delay={i * 0.05}>
-                  <span className="numeral text-[1.1rem]">{value.index}.</span>
-                  <h3 className="mt-3 font-serif text-d4">{value.title}</h3>
-                  <p className="mt-4 max-w-prose text-small text-muted">{value.body}</p>
-                </Reveal>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+        <ul className="grid gap-px border border-ink/8 bg-ink/8 sm:grid-cols-2">
+          {values.map((value, i) => (
+            <li key={value.title} className="h-full bg-mat p-8 lg:p-11">
+              <Reveal delay={(i % 2) * 0.05}>
+                <span className="numeral">{value.index}.</span>
+                <h3 className="mt-3 text-d3">{value.title}</h3>
+                <p className="mt-4 max-w-prose text-small text-ink-2">{value.body}</p>
+              </Reveal>
+            </li>
+          ))}
+        </ul>
+      </Section>
 
       {/* ---------- The workshop ---------- */}
-      <section className="surface-sandal py-section">
-        <div className="wrap">
-          <Reveal className="mb-11 max-w-[40rem]">
-            <span className="eyebrow">The workshop</span>
-            <h2 className="mt-4 font-serif text-d3">
-              Nandalike, Karkala Taluk — where all of it is made.
-            </h2>
-            <p className="mt-5 max-w-prose text-muted">
-              {'{{TODO: photographs of the workshop itself, the machines and the craftsmen at work. Every photograph the business has is of a finished piece — nothing of hands, chisels or raw timber. These would transform this page and The Craft.}}'}
-            </p>
+      <div className="bg-paper-2">
+        <Section index="IV">
+          <Reveal>
+            <SectionHead
+              eyebrow="The workshop"
+              title="Nandalike, Karkala Taluk — where all of it is made."
+              lead={
+                <span className="italic text-ink-3">
+                  {'{{TODO: photographs of the workshop itself, the machines and the craftsmen at work. Every photograph the business has is of a finished piece.}}'}
+                </span>
+              }
+            />
           </Reveal>
 
-          <Reveal delay={0.08}>
+          <Reveal delay={0.06}>
             <div className="grid gap-4 sm:grid-cols-3">
               {[
                 '/images/editorial/craft-carved-mantapa.jpg',
                 '/images/gallery/residential/latest-work-12.jpg',
                 '/images/editorial/craft-carved-swing.jpg',
               ].map((src, i) => (
-                <RevealImage
-                  key={src}
-                  src={src}
-                  alt="Carved woodwork made at the Sarala workshop in Nandalike"
-                  sizes="(max-width: 640px) 92vw, 30vw"
-                  className={`aspect-[3/4] overflow-hidden ${i === 1 ? 'sm:mt-10' : ''}`}
-                  quality={72}
-                />
+                <div key={src} className={i === 1 ? 'sm:mt-10' : ''}>
+                  <Plate>
+                    <PlateImage
+                      src={src}
+                      alt="Carved woodwork made at the Sarala workshop in Nandalike"
+                      sizes="(max-width: 640px) 92vw, 30vw"
+                      aspect="3/4"
+                      quality={72}
+                    />
+                  </Plate>
+                </div>
               ))}
             </div>
           </Reveal>
 
-          <OrnamentDivider className="mt-16" tone="honey" />
-
-          <div className="mt-12 text-center">
-            <p className="mx-auto max-w-prose font-serif text-d4 text-rosewood">
-              {site.tagline}.
-            </p>
-            <Link href="/the-craft" className="btn btn-ink mt-8 inline-flex">
-              How a piece is made
-            </Link>
-          </div>
-        </div>
-      </section>
+          <Reveal delay={0.1}>
+            <div className="mt-16 text-center">
+              <p className="mx-auto max-w-prose text-d3">{site.tagline}.</p>
+              <Link href="/the-craft" className="btn mt-8 inline-flex">
+                How a piece is made
+              </Link>
+            </div>
+          </Reveal>
+        </Section>
+      </div>
     </>
   )
 }

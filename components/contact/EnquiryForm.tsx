@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import { submitEnquiry, type EnquiryState } from '@/app/actions/enquiry'
 import { whatsappLink } from '@/lib/whatsapp'
 import { EASE } from '@/lib/motion'
-import { Lotus } from '@/components/ornament/Ornaments'
+import { Padma } from '@/components/ornament/Ornaments'
 
 const INTERESTS = [
   'Doors & Windows',
@@ -71,10 +71,10 @@ export function EnquiryForm() {
 
   if (state.status === 'success') {
     return (
-      <div className="border border-brass/30 bg-ivory/5 p-9 text-center sm:p-12">
-        <Lotus className="mx-auto h-12 w-16" stroke="#c9a35f" />
-        <h2 className="mt-7 font-serif text-d3 text-sandalwood">Thank you — it has reached us.</h2>
-        <p className="mx-auto mt-4 max-w-prose text-small font-light text-sandalwood/75">
+      <div className="border border-ink/14 bg-mat p-9 text-center sm:p-12">
+        <Padma className="mx-auto h-14 w-14 text-bronze" />
+        <h2 className="mt-7 font-serif text-d3 text-ink">Thank you — it has reached us.</h2>
+        <p className="mx-auto mt-4 max-w-prose text-small font-light text-ink-2">
           We read every enquiry ourselves and will come back to you on the number you gave us. If it
           is urgent, WhatsApp is the fastest way to reach the workshop.
         </p>
@@ -93,7 +93,7 @@ export function EnquiryForm() {
   return (
     <form
       action={action}
-      className="border border-brass/25 bg-ivory/[0.04] p-7 backdrop-blur-[2px] sm:p-10"
+      className="border border-ink/14 bg-mat/[0.04] p-7 backdrop-blur-[2px] sm:p-10"
     >
       {/* Every field travels with the form, whichever step is on screen. */}
       {Object.entries(draft).map(([key, value]) => (
@@ -120,8 +120,8 @@ export function EnquiryForm() {
             </span>
             <span
               aria-hidden="true"
-              className={`block h-px transition-colors duration-900 ease-carve ${
-                i <= step ? 'bg-brass' : 'bg-brass/20'
+              className={`block h-px transition-colors duration-800 ease-carve ${
+                i <= step ? 'bg-bronze' : 'bg-bronze/20'
               }`}
             />
           </li>
@@ -136,10 +136,10 @@ export function EnquiryForm() {
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.5, ease: EASE }}
         >
-          <p className="font-sans text-eyebrow font-semibold uppercase text-brass">
+          <p className="font-caps text-label uppercase text-bronze">
             {STEPS[step].eyebrow} of four
           </p>
-          <h2 className="mt-3 font-serif text-d4 text-sandalwood">{STEPS[step].title}</h2>
+          <h2 className="mt-3 font-serif text-d4 text-ink">{STEPS[step].title}</h2>
 
           <div className="mt-7">
             {step === 0 && (
@@ -227,18 +227,18 @@ export function EnquiryForm() {
       </AnimatePresence>
 
       {state.status === 'error' && state.message && (
-        <p role="alert" className="mt-7 border-l-2 border-brass pl-4 text-small text-sandalwood/85">
+        <p role="alert" className="mt-7 border-l-2 border-bronze pl-4 text-small text-ink-2">
           {state.message}
         </p>
       )}
 
       {/* ---------- Controls ---------- */}
-      <div className="mt-9 flex flex-wrap items-center gap-4 border-t border-brass/15 pt-7">
+      <div className="mt-9 flex flex-wrap items-center gap-4 border-t border-ink/8 pt-7">
         {step > 0 && (
           <button
             type="button"
             onClick={() => setStep((s) => s - 1)}
-            className="link-draw font-sans text-eyebrow font-semibold uppercase text-brass/80"
+            className="font-caps text-label uppercase text-bronze"
           >
             Back
           </button>
@@ -249,7 +249,7 @@ export function EnquiryForm() {
             type="button"
             onClick={() => setStep((s) => s + 1)}
             disabled={!canAdvance}
-            className="btn btn-solid ml-auto disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn btn-fill ml-auto disabled:cursor-not-allowed disabled:opacity-40"
           >
             Continue
           </button>
@@ -259,7 +259,7 @@ export function EnquiryForm() {
               href={whatsappLink(draft)}
               target="_blank"
               rel="noopener noreferrer"
-              className="link-draw font-sans text-eyebrow font-semibold uppercase text-brass"
+              className="font-caps text-label uppercase text-bronze"
             >
               Send on WhatsApp instead
             </a>
@@ -274,7 +274,7 @@ export function EnquiryForm() {
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
-    <button type="submit" className="btn btn-solid" disabled={pending}>
+    <button type="submit" className="btn btn-fill" disabled={pending}>
       {pending ? 'Sending…' : 'Send enquiry'}
     </button>
   )
@@ -300,10 +300,10 @@ function ChoiceGroup({
           return (
             <label
               key={option}
-              className={`flex cursor-pointer items-center gap-3 border px-4 py-3.5 font-sans text-small transition-colors duration-600 ease-carve ${
+              className={`flex cursor-pointer items-center gap-3 border px-4 py-3.5 font-caps text-small transition-colors duration-500 ease-carve ${
                 active
-                  ? 'border-brass bg-brass/10 text-sandalwood'
-                  : 'border-sandalwood/15 text-sandalwood/70 hover:border-brass/50'
+                  ? 'border-bronze bg-bronze/10 text-ink'
+                  : 'border-ink/14 text-ink-2 hover:border-bronze/50'
               }`}
             >
               <input
@@ -315,8 +315,8 @@ function ChoiceGroup({
               />
               <span
                 aria-hidden="true"
-                className={`h-2 w-2 shrink-0 rotate-45 border transition-colors duration-600 ease-carve ${
-                  active ? 'border-brass bg-brass' : 'border-sandalwood/35'
+                className={`h-2 w-2 shrink-0 rotate-45 border transition-colors duration-500 ease-carve ${
+                  active ? 'border-bronze bg-bronze' : 'border-ink/25'
                 }`}
               />
               {option}
@@ -361,7 +361,7 @@ function Field({
         className={`field-input ${error ? 'border-b-brass' : ''}`}
       />
       {error && (
-        <span id={`${id}-error`} className="mt-2 block text-[0.78rem] text-brass">
+        <span id={`${id}-error`} className="mt-2 block text-[0.78rem] text-bronze">
           {error}
         </span>
       )}

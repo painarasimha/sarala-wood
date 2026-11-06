@@ -1,31 +1,29 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Manrope } from 'next/font/google'
+import { EB_Garamond, Marcellus } from 'next/font/google'
 import './globals.css'
 import { site } from '@/content/site'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { SmoothScroll } from '@/components/layout/SmoothScroll'
-import { Preloader, preloaderScript } from '@/components/layout/Preloader'
-import { Cursor } from '@/components/layout/Cursor'
 import { WhatsAppButton } from '@/components/layout/WhatsAppButton'
-import { PageTransition } from '@/components/layout/PageTransition'
 
-// Only the weights the site actually sets are loaded — every extra file is
-// another request competing with the one the headline is waiting for.
-const display = Cormorant_Garamond({
+// Weight 400 only, explicitly. Left unpinned, next/font ships the full
+// variable font — 158 KB across two files for an axis the site never uses,
+// which on a throttled phone blocks the largest paint on every page.
+const serif = EB_Garamond({
   subsets: ['latin'],
   weight: ['400'],
   style: ['normal', 'italic'],
-  variable: '--font-display',
+  variable: '--font-serif',
   display: 'swap',
   preload: true,
 })
 
-// Manrope is a variable font: omitting `weight` ships one file covering the
-// whole axis instead of one per weight.
-const body = Manrope({
+// Roman inscriptional capitals, for labels and small caps. One weight only.
+const caps = Marcellus({
   subsets: ['latin'],
-  variable: '--font-body',
+  weight: ['400'],
+  variable: '--font-caps',
   display: 'swap',
   preload: true,
 })
@@ -68,14 +66,11 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
-  icons: {
-    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
-    apple: '/apple-icon.png',
-  },
+  icons: { icon: [{ url: '/icon.svg', type: 'image/svg+xml' }] },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1c120c',
+  themeColor: '#F3EEE4',
   colorScheme: 'light',
 }
 
@@ -140,24 +135,16 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${display.variable} ${body.variable}`}>
-      <head>
-        {/* Decides the preloader before the first paint. See Preloader.tsx. */}
-        <script dangerouslySetInnerHTML={{ __html: preloaderScript }} />
-      </head>
-      <body className="film-grain">
+    <html lang="en-IN" className={`${serif.variable} ${caps.variable}`}>
+      <body>
         <script
           type="application/ld+json"
-          // The payload is our own static object, not user input.
+          // Our own static object, not user input.
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <SmoothScroll />
-        <Preloader />
-        <Cursor />
         <Header />
-        <PageTransition>
-          <main id="main">{children}</main>
-        </PageTransition>
+        <main id="main">{children}</main>
         <Footer />
         <WhatsAppButton />
       </body>

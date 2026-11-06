@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { bySpace } from '@/content/gallery'
+import { bySpace, trimForClient } from '@/content/gallery'
 import { spaces } from '@/content/story'
 import type { SpaceSlug } from '@/content/types'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -77,7 +77,7 @@ export default async function SpaceProjectsPage({
         lead={copy.lead}
       />
       <section className="surface-paper">
-        <ProjectsGallery items={items} space={match.slug} />
+        <ProjectsGallery items={trimForClient(items)} space={match.slug} />
       </section>
     </>
   )

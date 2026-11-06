@@ -1,23 +1,24 @@
 import Link from 'next/link'
-import { Kalasha, OrnamentDivider } from '@/components/ornament/Ornaments'
+import { Padma } from '@/components/ornament/Ornaments'
+import { BeadRule } from '@/components/ui/Section'
 
 export default function NotFound() {
   return (
-    <section className="surface-wood flex min-h-[100svh] items-center py-32">
+    <section className="flex min-h-[72svh] items-center py-section">
       <div className="wrap text-center">
-        <Kalasha className="mx-auto h-24 w-14 opacity-75" stroke="#c9a35f" />
+        <Padma className="mx-auto h-16 w-16 text-bronze" />
 
-        <p className="eyebrow mt-10">Error 404</p>
-        <h1 className="mx-auto mt-5 max-w-[18ch] font-serif text-d1 text-sandalwood">
-          This door opens onto <em className="accent">nothing.</em>
+        <p className="label mt-10">Error 404</p>
+        <h1 className="mx-auto mt-5 max-w-[18ch] text-d1">
+          This door opens onto <em className="italic text-bronze">nothing.</em>
         </h1>
-        <p className="mx-auto mt-6 max-w-narrow font-light text-sandalwood/70">
-          The page you were looking for has been moved or never existed. Everything we have made is
-          still here, one floor down.
+        <p className="mx-auto mt-6 max-w-narrow text-lead text-ink-2">
+          The page you were looking for has been moved or never existed. Everything we have made
+          is still here, one floor down.
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link href="/" className="btn btn-solid">
+          <Link href="/" className="btn btn-fill">
             Back to the beginning
           </Link>
           <Link href="/projects" className="btn">
@@ -25,7 +26,7 @@ export default function NotFound() {
           </Link>
         </div>
 
-        <OrnamentDivider className="mt-16 opacity-60" />
+        <BeadRule className="mx-auto mt-14 max-w-sm" />
       </div>
     </section>
   )

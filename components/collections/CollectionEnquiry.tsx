@@ -13,7 +13,7 @@ export function CollectionEnquiry({ collection }: { collection: string }) {
     <div className="mt-10 flex flex-wrap gap-4">
       <Link
         href={`/contact?interest=${encodeURIComponent(collection)}`}
-        className="btn btn-solid"
+        className="btn btn-fill"
       >
         Enquire about {collection.toLowerCase()}
       </Link>

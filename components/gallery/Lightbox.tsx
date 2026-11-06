@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { GalleryItem } from '@/content/types'
+import { altFor } from '@/content/gallery'
 import { EASE } from '@/lib/motion'
 
 /**
@@ -75,7 +76,7 @@ export function Lightbox({
       {open && item && (
         <motion.div
           ref={panelRef}
-          className="fixed inset-0 z-[95] flex flex-col bg-ebony/95 backdrop-blur-sm"
+          className="fixed inset-0 z-[95] flex flex-col bg-dark/97 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -96,13 +97,13 @@ export function Lightbox({
           }}
         >
           <div className="flex items-center justify-between gap-4 px-[var(--gutter)] py-5">
-            <p className="font-sans text-eyebrow font-semibold uppercase text-brass">
+            <p className="font-caps text-label uppercase text-bronze-2">
               {item.categoryLabel} · {index + 1} / {items.length}
             </p>
             <button
               type="button"
               onClick={onClose}
-              className="grid h-11 w-11 place-items-center border border-brass/40 text-brass transition-colors duration-600 ease-carve hover:bg-brass hover:text-ebony"
+              className="grid h-11 w-11 place-items-center border border-bronze-2/40 text-bronze-2 transition-colors duration-500 ease-carve hover:bg-bronze-2 hover:text-dark"
               aria-label="Close"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
@@ -115,7 +116,7 @@ export function Lightbox({
             <button
               type="button"
               onClick={() => go(-1)}
-              className="absolute left-1 z-10 grid h-12 w-12 place-items-center text-brass transition-transform duration-600 ease-carve hover:-translate-x-1 sm:left-4"
+              className="absolute left-1 z-10 grid h-12 w-12 place-items-center text-bronze-2 transition-transform duration-500 ease-carve hover:-translate-x-1 sm:left-4"
               aria-label="Previous photograph"
             >
               <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
@@ -139,13 +140,13 @@ export function Lightbox({
               >
                 <Image
                   src={item.src}
-                  alt={item.alt}
+                  alt={altFor(item)}
                   fill
                   sizes="(max-width: 640px) 96vw, 80vw"
                   quality={90}
                   placeholder="blur"
                   blurDataURL={item.blurDataURL}
-                  className="object-contain transition-transform duration-1200 ease-carve"
+                  className="object-contain transition-transform duration-1100 ease-carve"
                   style={{ transform: zoomed ? 'scale(1.7)' : 'scale(1)' }}
                 />
               </button>
@@ -154,7 +155,7 @@ export function Lightbox({
             <button
               type="button"
               onClick={() => go(1)}
-              className="absolute right-1 z-10 grid h-12 w-12 place-items-center text-brass transition-transform duration-600 ease-carve hover:translate-x-1 sm:right-4"
+              className="absolute right-1 z-10 grid h-12 w-12 place-items-center text-bronze-2 transition-transform duration-500 ease-carve hover:translate-x-1 sm:right-4"
               aria-label="Next photograph"
             >
               <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
@@ -163,7 +164,7 @@ export function Lightbox({
             </button>
           </div>
 
-          <p className="px-[var(--gutter)] pb-7 pt-4 text-center font-serif text-[1.15rem] italic text-brass">
+          <p className="px-[var(--gutter)] pb-7 pt-4 text-center font-serif text-[1.15rem] italic text-bronze-2">
             {item.subcategoryLabel}
           </p>
         </motion.div>
